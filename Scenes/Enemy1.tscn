@@ -1,7 +1,75 @@
-[gd_scene load_steps=5 format=3 uid="uid://bf1m0d3im0jl0"]
+[gd_scene load_steps=10 format=3 uid="uid://bf1m0d3im0jl0"]
 
 [ext_resource type="Script" path="res://Scripts/Enemy1.gd" id="1_3jmmv"]
 [ext_resource type="Texture2D" uid="uid://ggiifhxxvn01" path="res://assets/enemy1/Enemy1.png" id="1_hsuhy"]
+[ext_resource type="Shader" uid="uid://tn6j8y6w3iic" path="res://Shaders/Enemy1_hit_flash_shader.tres" id="2_8uod5"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_h4adv"]
+resource_local_to_scene = true
+shader = ExtResource("2_8uod5")
+shader_parameter/enabled = false
+shader_parameter/hit_color = Color(1, 1, 1, 1)
+
+[sub_resource type="Animation" id="Animation_8x7jn"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".:frame")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [0]
+}
+
+[sub_resource type="Animation" id="Animation_8yooc"]
+resource_name = "hit"
+length = 0.5
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = false
+tracks/0/path = NodePath(".:frame")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [0]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath(".:rotation")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0, 0.1, 0.2, 0.3, 0.4),
+"transitions": PackedFloat32Array(1, 1, 1, 1, 1),
+"update": 0,
+"values": [0.0121854, 0.265062, 0.534163, 0.320489, 0.0728751]
+}
+tracks/2/type = "value"
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/path = NodePath(".:material:shader_parameter/enabled")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/keys = {
+"times": PackedFloat32Array(0, 0.1, 0.3, 0.4),
+"transitions": PackedFloat32Array(1, 1, 1, 1),
+"update": 1,
+"values": [true, false, true, false]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_17nuj"]
+_data = {
+"RESET": SubResource("Animation_8x7jn"),
+"hit": SubResource("Animation_8yooc")
+}
 
 [sub_resource type="CapsuleShape2D" id="CapsuleShape2D_mwac6"]
 height = 40.0
@@ -11,17 +79,30 @@ radius = 18.0
 height = 40.0
 
 [node name="Enemy1" type="CharacterBody2D"]
+collision_layer = 4
+collision_mask = 3
 script = ExtResource("1_3jmmv")
 
 [node name="Sprite2D" type="Sprite2D" parent="."]
+material = SubResource("ShaderMaterial_h4adv")
+rotation = 0.0728751
 scale = Vector2(0.25, 0.25)
 texture = ExtResource("1_hsuhy")
 
+[node name="AnimationPlayer" type="AnimationPlayer" parent="Sprite2D"]
+libraries = {
+"": SubResource("AnimationLibrary_17nuj")
+}
+
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+visible = false
 shape = SubResource("CapsuleShape2D_mwac6")
 
 [node name="HurtBox" type="Area2D" parent="."]
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="HurtBox"]
+visible = false
 shape = SubResource("CapsuleShape2D_g5wp2")
 debug_color = Color(0.932732, 0.138333, 0.547459, 0.42)
+
+[connection signal="animation_finished" from="Sprite2D/AnimationPlayer" to="." method="_on_animation_player_animation_finished"]

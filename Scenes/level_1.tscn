@@ -14,7 +14,6 @@
 [node name="player_test" parent="." instance=ExtResource("2_rtoe6")]
 position = Vector2(84, 181)
 collision_layer = 2
-collision_mask = 3
 
 [node name="StaticBody2D" type="StaticBody2D" parent="."]
 position = Vector2(131, 212)

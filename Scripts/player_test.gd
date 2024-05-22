@@ -1,11 +1,10 @@
 extends CharacterBody2D
 
 enum State { IDLE, RUN, JUMP, ATTACK }
-
 var current_state := State.IDLE
-
 const SPEED = 450.0
 const JUMP_VELOCITY = -250.0
+var sword_damage = 5
 
 var state_animations = {
 	State.IDLE: "run",
@@ -71,6 +70,9 @@ func _on_animation_player_animation_finished(anim_name):
 
 func _on_hit_box_area_entered(area):
 	print("entro en contacto con" +str(area))
-	if area.get_parent():
-		area.get_parent().queue_free()
-	 
+	var enemy = area.get_parent()
+	if enemy.has_method("on_hit"):
+		enemy.call("on_hit", sword_damage)
+
+	#if area.get_parent():
+	#	area.get_parent().queue_free()
