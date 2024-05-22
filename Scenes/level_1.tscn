@@ -1,8 +1,9 @@
-[gd_scene load_steps=5 format=3 uid="uid://d2xuvmt3qc58p"]
+[gd_scene load_steps=6 format=3 uid="uid://d2xuvmt3qc58p"]
 
 [ext_resource type="PackedScene" uid="uid://d0tn51esbly0g" path="res://Scenes/Background.tscn" id="1_0t5bx"]
 [ext_resource type="PackedScene" uid="uid://bpwd8fdh01307" path="res://Scenes/player_test.tscn" id="2_rtoe6"]
 [ext_resource type="PackedScene" uid="uid://bf1m0d3im0jl0" path="res://Scenes/Enemy1.tscn" id="3_ogtev"]
+[ext_resource type="PackedScene" uid="uid://hgh8ckqtdhfh" path="res://Scenes/spawn_enemy.tscn" id="4_movyg"]
 
 [sub_resource type="WorldBoundaryShape2D" id="WorldBoundaryShape2D_b7417"]
 
@@ -11,9 +12,8 @@
 [node name="ParallaxBackground" parent="." instance=ExtResource("1_0t5bx")]
 
 [node name="player_test" parent="." instance=ExtResource("2_rtoe6")]
-position = Vector2(123, 176)
+position = Vector2(84, 181)
 collision_layer = 2
-collision_mask = 3
 
 [node name="StaticBody2D" type="StaticBody2D" parent="."]
 position = Vector2(131, 212)
@@ -21,17 +21,8 @@ position = Vector2(131, 212)
 [node name="CollisionShape2D" type="CollisionShape2D" parent="StaticBody2D"]
 shape = SubResource("WorldBoundaryShape2D_b7417")
 
-[node name="Enemy1" parent="." instance=ExtResource("3_ogtev")]
-position = Vector2(218, 90)
-
-[node name="Enemy2" parent="." instance=ExtResource("3_ogtev")]
-position = Vector2(218, 90)
-
 [node name="Enemy3" parent="." instance=ExtResource("3_ogtev")]
-position = Vector2(302, 38)
+position = Vector2(300, 41)
 
-[node name="Enemy4" parent="." instance=ExtResource("3_ogtev")]
-position = Vector2(270, 95)
-
-[node name="Enemy5" parent="." instance=ExtResource("3_ogtev")]
-position = Vector2(178, 91)
+[node name="SpawnEnemy" parent="." instance=ExtResource("4_movyg")]
+position = Vector2(200, 3)
