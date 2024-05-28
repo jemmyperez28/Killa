@@ -5,6 +5,7 @@ var current_state := State.IDLE
 const SPEED = 450.0
 const JUMP_VELOCITY = -250.0
 var sword_damage = 5
+@onready var particles = $IceParticles
 
 var state_animations = {
 	State.IDLE: "run",
