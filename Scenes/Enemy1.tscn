@@ -1,4 +1,4 @@
-[gd_scene load_steps=10 format=3 uid="uid://bf1m0d3im0jl0"]
+[gd_scene load_steps=11 format=3 uid="uid://bf1m0d3im0jl0"]
 
 [ext_resource type="Script" path="res://Scripts/Enemy1.gd" id="1_3jmmv"]
 [ext_resource type="Texture2D" uid="uid://ggiifhxxvn01" path="res://assets/enemy1/Enemy1.png" id="1_hsuhy"]
@@ -90,6 +90,10 @@ height = 40.0
 radius = 18.0
 height = 40.0
 
+[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_2k8yh"]
+radius = 2.7891
+height = 45.9775
+
 [node name="Enemy1" type="CharacterBody2D"]
 collision_layer = 4
 collision_mask = 3
@@ -107,14 +111,26 @@ libraries = {
 }
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
-visible = false
 shape = SubResource("CapsuleShape2D_mwac6")
 
 [node name="HurtBox" type="Area2D" parent="."]
+collision_layer = 4
+collision_mask = 10
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="HurtBox"]
-visible = false
 shape = SubResource("CapsuleShape2D_g5wp2")
 debug_color = Color(0.932732, 0.138333, 0.547459, 0.42)
 
+[node name="HitBox" type="Area2D" parent="."]
+rotation = 0.00327238
+collision_layer = 16
+collision_mask = 3
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="HitBox"]
+position = Vector2(5.96046e-08, -2)
+rotation = -1.04454
+shape = SubResource("CapsuleShape2D_2k8yh")
+debug_color = Color(0.26308, 0.628189, 0.246192, 0.42)
+
 [connection signal="animation_finished" from="Sprite2D/AnimationPlayer" to="." method="_on_animation_player_animation_finished"]
+[connection signal="area_entered" from="HitBox" to="." method="_on_hit_box_area_entered"]
