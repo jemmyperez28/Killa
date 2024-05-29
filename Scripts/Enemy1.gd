@@ -1,10 +1,12 @@
 extends CharacterBody2D
 @onready var animation = $Sprite2D/AnimationPlayer
+@onready var hit_box = $HitBox
 var ice_particles_scene = preload("res://Scenes/ice_particles.tscn")
 # Get the gravity from the project settings to be synced with RigidBody nodes.
 var gravity = ProjectSettings.get_setting("physics/2d/default_gravity")
 var speed = 3000
 var hp = 15
+var damage = 5
 var on_hit_bool = false
 
 func _physics_process(delta):
@@ -49,3 +51,8 @@ func emit_particles():
 	# Opcional: Eliminar el nodo de partículas después de un tiempo para limpiar la escena
 	await get_tree().create_timer(ice_particles.lifetime).timeout
 	ice_particles.queue_free()
+
+func _on_hit_box_area_entered(area):
+	var player = area.get_parent()
+	if player.has_method("on_hit") and not player.hitted and not player.invulnerable:
+		player.call("on_hit", damage)

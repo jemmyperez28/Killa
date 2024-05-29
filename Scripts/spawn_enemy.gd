@@ -17,9 +17,5 @@ func spawn_enemy():
 		EnemyInstance.position = Vector2(random.randi_range(350,400),random.randi_range(30,100))
 		add_child(EnemyInstance)
 		
-		
-
-
 func _on_timer_timeout():
-	print("spawniee")
 	spawn = true
