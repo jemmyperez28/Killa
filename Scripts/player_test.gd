@@ -5,10 +5,12 @@ var current_state := State.IDLE
 const SPEED = 450.0
 const JUMP_VELOCITY = -250.0
 var sword_damage = 5
-var hp = 30
+@export var maxHealth = 30
+@onready var hp = maxHealth
 @onready var hitTimer = $HitTimer
 @onready var blinkTimer = $BlinkTimer
 @onready var playerHurtBox = $HurtBox
+@onready var sprite = $Sprite2D
 var invulnerable = false
 var hitted = false
 
@@ -21,11 +23,13 @@ var state_animations = {
 	State.HIT: "hit"
 }
 
+
 func _ready():
 	current_state = State.IDLE
 	
 func _physics_process(delta):
 	# Gravity
+	
 	var gravity = ProjectSettings.get_setting("physics/2d/default_gravity")
 	velocity.y += gravity * delta
 	
@@ -113,3 +117,11 @@ func _on_hit_timer_timeout():
 	invulnerable = false
 	playerHurtBox.monitoring = true
 	blinkTimer.stop()
+	sprite.show()
+
+
+func _on_blink_timer_timeout():
+	if sprite.visible:
+		sprite.hide()
+	else:
+		sprite.show()
