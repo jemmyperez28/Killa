@@ -1,7 +1,9 @@
-[gd_scene load_steps=13 format=3 uid="uid://bpwd8fdh01307"]
+[gd_scene load_steps=15 format=3 uid="uid://bpwd8fdh01307"]
 
 [ext_resource type="Script" path="res://Scripts/player_test.gd" id="1_lk18g"]
 [ext_resource type="Texture2D" uid="uid://dtcsuvolfdmus" path="res://assets/sprite_sheets/char_1_no_back_ground_fix.png" id="2_bw24s"]
+[ext_resource type="Texture2D" uid="uid://bfbqm0otwudky" path="res://assets/images/profile_player1.png" id="3_e3ab8"]
+[ext_resource type="Script" path="res://Scripts/health_bar_player_1.gd" id="4_7ed7i"]
 
 [sub_resource type="Animation" id="Animation_ux0jw"]
 length = 0.001
@@ -194,6 +196,22 @@ one_shot = true
 
 [node name="BlinkTimer" type="Timer" parent="."]
 wait_time = 0.05
+
+[node name="CanvasLayer" type="CanvasLayer" parent="."]
+
+[node name="Sprite2D" type="Sprite2D" parent="CanvasLayer"]
+position = Vector2(18, 17)
+scale = Vector2(0.05, 0.05)
+texture = ExtResource("3_e3ab8")
+
+[node name="ProgressBar" type="ProgressBar" parent="CanvasLayer" node_paths=PackedStringArray("player")]
+offset_left = 37.0
+offset_top = 2.0
+offset_right = 108.0
+offset_bottom = 29.0
+value = 100.0
+script = ExtResource("4_7ed7i")
+player = NodePath("../..")
 
 [connection signal="animation_finished" from="Sprite2D/AnimationPlayer" to="." method="_on_animation_player_animation_finished"]
 [connection signal="area_entered" from="HitBox" to="." method="_on_hit_box_area_entered"]

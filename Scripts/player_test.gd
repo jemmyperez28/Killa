@@ -13,6 +13,7 @@ var sword_damage = 5
 @onready var sprite = $Sprite2D
 var invulnerable = false
 var hitted = false
+signal cambio_vida(valor)
 
 
 var state_animations = {
@@ -26,6 +27,7 @@ var state_animations = {
 
 func _ready():
 	current_state = State.IDLE
+	cambio_vida.emit()
 	
 func _physics_process(delta):
 	# Gravity
@@ -110,6 +112,7 @@ func on_hit(dmg):
 		playerHurtBox.monitoring = false
 		hitTimer.start()
 		blinkTimer.start()
+		cambio_vida.emit()
 
 func _on_hit_timer_timeout():
 	#print("Timer terminado")
