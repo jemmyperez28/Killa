@@ -10,7 +10,7 @@ func _ready():
 
 func update():
 	print(player.hp)
-	value = player.hp
+	value = player.hp * 100 / player.maxHealth
 			
 	#value = player.hp * 100 / player.maxHealth
 # Called every frame. 'delta' is the elapsed time since the previous frame.
