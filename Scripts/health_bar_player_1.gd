@@ -9,7 +9,7 @@ func _ready():
 	update()
 
 func update():
-	print(player.hp)
+	#print(player.hp)
 	value = player.hp * 100 / player.maxHealth
 			
 	#value = player.hp * 100 / player.maxHealth
