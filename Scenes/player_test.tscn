@@ -1,4 +1,4 @@
-[gd_scene load_steps=18 format=3 uid="uid://bpwd8fdh01307"]
+[gd_scene load_steps=19 format=3 uid="uid://bpwd8fdh01307"]
 
 [ext_resource type="Script" path="res://Scripts/player_test.gd" id="1_lk18g"]
 [ext_resource type="Texture2D" uid="uid://dtcsuvolfdmus" path="res://assets/sprite_sheets/char_1_no_back_ground_fix.png" id="2_bw24s"]
@@ -6,6 +6,7 @@
 [ext_resource type="Script" path="res://Scripts/health_bar_player_1.gd" id="4_7ed7i"]
 [ext_resource type="Texture2D" uid="uid://mscdm7g7vcwx" path="res://assets/images/barra_fondo.png" id="5_n1vcy"]
 [ext_resource type="Texture2D" uid="uid://b571uvu0diffy" path="res://assets/images/relleno.png" id="6_72f7u"]
+[ext_resource type="Texture2D" uid="uid://butytl0r2qrmt" path="res://assets/images/barra_mascara.png" id="6_rkplt"]
 [ext_resource type="Script" path="res://Scripts/texture_progress_bar_player1.gd" id="7_n7t0n"]
 
 [sub_resource type="Animation" id="Animation_ux0jw"]
@@ -224,6 +225,7 @@ offset_right = 724.0
 offset_bottom = 63.0
 scale = Vector2(0.2, 0.2)
 texture_under = ExtResource("5_n1vcy")
+texture_over = ExtResource("6_rkplt")
 texture_progress = ExtResource("6_72f7u")
 script = ExtResource("7_n7t0n")
 player = NodePath("../..")
