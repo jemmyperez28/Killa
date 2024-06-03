@@ -9,6 +9,9 @@ var hp = 15
 var damage = 5
 var on_hit_bool = false
 
+func _ready():
+	animation.play("idle")
+
 func _physics_process(delta):
 	velocity.x = -speed * delta
 	velocity.y += gravity * delta
@@ -31,7 +34,7 @@ func _on_animation_player_animation_finished(anim_name):
 	if anim_name == "hit":
 		speed = 3000
 		on_hit_bool = false
-		animation.play("RESET")
+		animation.play("idle")
 		#Emision de particulas
 
 func emit_particles():
