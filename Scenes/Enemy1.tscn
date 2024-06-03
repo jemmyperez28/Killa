@@ -1,8 +1,8 @@
-[gd_scene load_steps=11 format=3 uid="uid://bf1m0d3im0jl0"]
+[gd_scene load_steps=12 format=3 uid="uid://bf1m0d3im0jl0"]
 
 [ext_resource type="Script" path="res://Scripts/Enemy1.gd" id="1_3jmmv"]
-[ext_resource type="Texture2D" uid="uid://ggiifhxxvn01" path="res://assets/enemy1/Enemy1.png" id="1_hsuhy"]
 [ext_resource type="Shader" uid="uid://tn6j8y6w3iic" path="res://Shaders/Enemy1_hit_flash_shader.tres" id="2_8uod5"]
+[ext_resource type="Texture2D" uid="uid://t82tarejx06d" path="res://assets/enemy1/scheletor_idle_caminar.png" id="3_gltqe"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_h4adv"]
 resource_local_to_scene = true
@@ -35,6 +35,18 @@ tracks/1/keys = {
 "transitions": PackedFloat32Array(1),
 "update": 0,
 "values": [-2.23368e-05]
+}
+tracks/2/type = "value"
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/path = NodePath(".:frame_coords")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [Vector2i(1, 0)]
 }
 
 [sub_resource type="Animation" id="Animation_8yooc"]
@@ -77,22 +89,40 @@ tracks/2/keys = {
 "values": [true, false, true, false]
 }
 
+[sub_resource type="Animation" id="Animation_6c4fv"]
+resource_name = "idle"
+length = 1.2
+loop_mode = 1
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".:frame_coords")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1),
+"transitions": PackedFloat32Array(1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1),
+"update": 1,
+"values": [Vector2i(0, 0), Vector2i(1, 0), Vector2i(2, 0), Vector2i(3, 0), Vector2i(0, 1), Vector2i(1, 1), Vector2i(2, 1), Vector2i(3, 1), Vector2i(0, 2), Vector2i(1, 2), Vector2i(3, 3)]
+}
+
 [sub_resource type="AnimationLibrary" id="AnimationLibrary_17nuj"]
 _data = {
 "RESET": SubResource("Animation_8x7jn"),
-"hit": SubResource("Animation_8yooc")
+"hit": SubResource("Animation_8yooc"),
+"idle": SubResource("Animation_6c4fv")
 }
 
 [sub_resource type="CapsuleShape2D" id="CapsuleShape2D_mwac6"]
 height = 40.0
 
 [sub_resource type="CapsuleShape2D" id="CapsuleShape2D_g5wp2"]
-radius = 18.0
-height = 40.0
+radius = 16.9991
+height = 50.0178
 
 [sub_resource type="CapsuleShape2D" id="CapsuleShape2D_2k8yh"]
 radius = 2.7891
-height = 45.9775
+height = 58.8196
 
 [node name="Enemy1" type="CharacterBody2D"]
 collision_layer = 4
@@ -102,8 +132,11 @@ script = ExtResource("1_3jmmv")
 [node name="Sprite2D" type="Sprite2D" parent="."]
 material = SubResource("ShaderMaterial_h4adv")
 rotation = -2.23368e-05
-scale = Vector2(0.25, 0.25)
-texture = ExtResource("1_hsuhy")
+scale = Vector2(0.09, 0.09)
+texture = ExtResource("3_gltqe")
+hframes = 5
+vframes = 4
+frame = 1
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="Sprite2D"]
 libraries = {
@@ -111,6 +144,7 @@ libraries = {
 }
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+position = Vector2(0, 4)
 shape = SubResource("CapsuleShape2D_mwac6")
 
 [node name="HurtBox" type="Area2D" parent="."]
@@ -118,6 +152,8 @@ collision_layer = 4
 collision_mask = 10
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="HurtBox"]
+position = Vector2(0, 5)
+rotation = -1.5606
 shape = SubResource("CapsuleShape2D_g5wp2")
 debug_color = Color(0.932732, 0.138333, 0.547459, 0.42)
 
@@ -127,8 +163,8 @@ collision_layer = 16
 collision_mask = 3
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="HitBox"]
-position = Vector2(5.96046e-08, -2)
-rotation = -1.04454
+position = Vector2(-6.00651, -1.98035)
+rotation = -1.27161
 shape = SubResource("CapsuleShape2D_2k8yh")
 debug_color = Color(0.26308, 0.628189, 0.246192, 0.42)
 
