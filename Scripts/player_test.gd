@@ -3,6 +3,7 @@ extends CharacterBody2D
 enum State { IDLE, RUN, JUMP, ATTACK, HIT }
 var current_state := State.IDLE
 #Init Values
+var disable_inputs = false
 const SPEED = 450.0
 const JUMP_VELOCITY = -250.0
 var invulnerable = false
@@ -24,9 +25,13 @@ var hitted = false
 @onready var sprite = $Sprite2D
 @onready var label_level = $CanvasLayer/level
 @onready var label_basic_damage = $CanvasLayer/basic_damage
+@onready var label_debug = $CanvasLayer/debug
 #Signials
 signal cambio_vida(valor)
 signal set_exp(current_exp,cap_level)
+
+#DEBUG ZONE
+var concatenado = " "
 
 #Levels multiplicators 
 
@@ -49,7 +54,11 @@ func _ready():
 	set_exp.emit(current_exp, cap_level)
 	
 func _physics_process(delta):
-	
+	#DEBUG ZONE
+	print(velocity.x)
+	var state_name = state_animations[current_state] 
+	concatenado = str(state_name) + " " + str(disable_inputs)
+	label_debug.text = str(concatenado) 
 	# Gravity
 	var gravity = ProjectSettings.get_setting("physics/2d/default_gravity")
 	velocity.y += gravity * delta
@@ -58,13 +67,15 @@ func _physics_process(delta):
 	if is_on_floor():
 		# Horizontal movement with delta
 		var movement_strength = (Input.get_action_strength("ui_right") - Input.get_action_strength("ui_left")) * 20.0
-		velocity.x = movement_strength * SPEED * delta
+		#desactivar movimiento en otro estado
+		if disable_inputs == false :
+			velocity.x = movement_strength * SPEED * delta
 		#print(velocity.x)
 		# State transitions based on input
-		if Input.is_action_just_pressed("ui_up"):
+		if Input.is_action_just_pressed("ui_up") and disable_inputs == false:
 			velocity.y = JUMP_VELOCITY
 			current_state = State.JUMP
-		elif Input.is_action_just_pressed("attack"):
+		elif Input.is_action_just_pressed("attack")  and disable_inputs == false:
 			current_state = State.ATTACK
 	else:
 		pass
@@ -78,10 +89,15 @@ func _physics_process(delta):
 		velocity.x = -150
 	else:
 		# Reset horizontal movement in other states
-		pass	
+		pass
+	
+	if current_state == State.ATTACK:
+		disable_inputs = true
+		velocity.x = 0
 	
 	# Animation Control
 	if current_state == State.JUMP:
+		disable_inputs = false
 		if velocity.y > 0:  # Play jump_up when ascending
 			#$Sprite2D/AnimationPlayer.set_speed_scale(3.0)
 			$Sprite2D/AnimationPlayer.play("jump_down")
@@ -103,6 +119,7 @@ func _physics_process(delta):
 	
 func _on_animation_player_animation_finished(anim_name):
 	if anim_name == "attack":
+		disable_inputs = false
 		current_state = State.RUN  # Transition back to run after attack
 	elif anim_name == "jump_down" and not is_on_floor():
 		$Sprite2D/AnimationPlayer.seek(0.1)
@@ -110,8 +127,10 @@ func _on_animation_player_animation_finished(anim_name):
 		current_state = State.RUN  # Transition back to run upon landing
 	elif anim_name == "hit":
 		if is_on_floor():
+			disable_inputs = false
 			current_state = State.RUN
 		else:
+			disable_inputs = false
 			current_state = State.JUMP
 func _on_hit_box_area_entered(area):
 	#print("entro en contacto con" +str(area))
