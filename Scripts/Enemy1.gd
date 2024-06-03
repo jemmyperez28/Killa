@@ -5,8 +5,9 @@ var ice_particles_scene = preload("res://Scenes/ice_particles.tscn")
 # Get the gravity from the project settings to be synced with RigidBody nodes.
 var gravity = ProjectSettings.get_setting("physics/2d/default_gravity")
 var speed = 3000
-var hp = 15
+var hp = 10
 var damage = 5
+var give_exp = 10
 var on_hit_bool = false
 
 func _ready():
@@ -15,17 +16,20 @@ func _ready():
 func _physics_process(delta):
 	velocity.x = -speed * delta
 	velocity.y += gravity * delta
-	if hp <= 0:
-		destroy()
+
 	move_and_slide()
 	
-func on_hit(dmg):
+func on_hit(dmg, player_node):
 	if on_hit_bool == false:
 		on_hit_bool = true
 		speed = 0
 		emit_particles()
 		animation.play("hit")
 		hp -= dmg
+		if hp <= 0:
+			if player_node.has_method("get_exp"):
+				player_node.call("get_exp", give_exp)
+			destroy()
 
 func destroy():
 	queue_free()

@@ -2,20 +2,33 @@ extends CharacterBody2D
 
 enum State { IDLE, RUN, JUMP, ATTACK, HIT }
 var current_state := State.IDLE
+#Init Values
 const SPEED = 450.0
 const JUMP_VELOCITY = -250.0
-var sword_damage = 5
+var invulnerable = false
+var hitted = false
+#Affected by level values
+@export var exp_increment_factor = 1.5
+@export var level_player = 1
+@export var sword_damage = 5
 @export var maxHealth = 30
+@export var cap_level = 30
+@export var current_exp = 0
 @onready var hp = maxHealth
+#Initialize instances
 @onready var hitTimer = $HitTimer
 @onready var blinkTimer = $BlinkTimer
 @onready var playerHurtBox = $HurtBox
 @onready var sprite = $Sprite2D
-var invulnerable = false
-var hitted = false
+@onready var label_level = $CanvasLayer/level
+@onready var label_basic_damage = $CanvasLayer/basic_damage
+#Signials
 signal cambio_vida(valor)
+signal set_exp(current_exp,cap_level)
 
+#Levels multiplicators 
 
+#State Animations
 var state_animations = {
 	State.IDLE: "run",
 	State.RUN: "run",
@@ -24,14 +37,18 @@ var state_animations = {
 	State.HIT: "hit"
 }
 
+#Check current level for 
 
 func _ready():
+	label_level.text = str(level_player)
+	label_basic_damage.text = str(sword_damage)
 	current_state = State.IDLE
 	cambio_vida.emit()
+	set_exp.emit(current_exp, cap_level)
 	
 func _physics_process(delta):
-	# Gravity
 	
+	# Gravity
 	var gravity = ProjectSettings.get_setting("physics/2d/default_gravity")
 	velocity.y += gravity * delta
 	
@@ -76,6 +93,7 @@ func _physics_process(delta):
 				$Sprite2D/AnimationPlayer.play(anim_name)
 		else:
 			$Sprite2D/AnimationPlayer.play(animation_to_play)
+	#print(current_exp)
 	move_and_slide()
 	#print("monitoring: ", playerHurtBox.monitoring)
 	#print(invulnerable)
@@ -94,10 +112,10 @@ func _on_animation_player_animation_finished(anim_name):
 		else:
 			current_state = State.JUMP
 func _on_hit_box_area_entered(area):
-	print("entro en contacto con" +str(area))
+	#print("entro en contacto con" +str(area))
 	var enemy = area.get_parent()
 	if enemy.has_method("on_hit"):
-		enemy.call("on_hit", sword_damage)
+		enemy.call("on_hit", sword_damage, self)
 
 func on_hit(dmg):
 	if not hitted and not invulnerable:
@@ -122,9 +140,24 @@ func _on_hit_timer_timeout():
 	blinkTimer.stop()
 	sprite.show()
 
-
 func _on_blink_timer_timeout():
 	if sprite.visible:
 		sprite.hide()
 	else:
 		sprite.show()
+
+func get_exp(exp):
+	current_exp += exp
+	if current_exp > cap_level:
+		level_up()
+	set_exp.emit(current_exp, cap_level)
+	
+func level_up():
+	level_player = level_player + 1 
+	sword_damage = sword_damage + 3
+	current_exp = current_exp - cap_level
+	cap_level = int(cap_level * exp_increment_factor)  # Incrementa el cap_level exponencialmente
+	label_level.text = str(level_player)
+	label_basic_damage.text = str(sword_damage)
+	
+	

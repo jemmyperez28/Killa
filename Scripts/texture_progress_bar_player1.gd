@@ -4,8 +4,8 @@ extends TextureProgressBar
 var a : int
 # Called when the node enters the scene tree for the first time.
 func _ready():
-	player.hp = 99
-	print(player.cambio_vida)
+	player.hp = 0
+	#print(player.cambio_vida)
 	player.cambio_vida.connect(update)
 	update()
 

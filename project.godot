@@ -23,6 +23,10 @@ window/size/window_width_override=960
 window/size/window_height_override=720
 window/stretch/mode="canvas_items"
 
+[gui]
+
+theme/custom_font="res://resources/PressStart.tres"
+
 [input]
 
 attack={
