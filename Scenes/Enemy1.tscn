@@ -114,7 +114,7 @@ _data = {
 }
 
 [sub_resource type="CapsuleShape2D" id="CapsuleShape2D_mwac6"]
-height = 40.0
+height = 32.0
 
 [sub_resource type="CapsuleShape2D" id="CapsuleShape2D_g5wp2"]
 radius = 16.9991
@@ -144,7 +144,7 @@ libraries = {
 }
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
-position = Vector2(0, 4)
+position = Vector2(0, 8)
 shape = SubResource("CapsuleShape2D_mwac6")
 
 [node name="HurtBox" type="Area2D" parent="."]
@@ -152,7 +152,7 @@ collision_layer = 4
 collision_mask = 10
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="HurtBox"]
-position = Vector2(0, 5)
+position = Vector2(3.72529e-09, 6)
 rotation = -1.5606
 shape = SubResource("CapsuleShape2D_g5wp2")
 debug_color = Color(0.932732, 0.138333, 0.547459, 0.42)
@@ -167,6 +167,9 @@ position = Vector2(-6.00651, -1.98035)
 rotation = -1.27161
 shape = SubResource("CapsuleShape2D_2k8yh")
 debug_color = Color(0.26308, 0.628189, 0.246192, 0.42)
+
+[node name="DamageNumberOrigin" type="Node2D" parent="."]
+position = Vector2(0, -13)
 
 [connection signal="animation_finished" from="Sprite2D/AnimationPlayer" to="." method="_on_animation_player_animation_finished"]
 [connection signal="area_entered" from="HitBox" to="." method="_on_hit_box_area_entered"]

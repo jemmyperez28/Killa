@@ -14,12 +14,6 @@ func _ready():
 func _update_exp(current_exp: int, cap_level: int):
 	#print(player.current_exp)
 	#value = current_exp * 100 / cap_level
-	print("CURRENT EXP")
-	print(current_exp)
-	print("CAP LEVEL")
-	print(cap_level)	
 	value = current_exp * 100 / cap_level
-
-	
 	#print("ENTRE")
 	#print(value)
