@@ -1,6 +1,7 @@
 extends CharacterBody2D
 @onready var animation = $Sprite2D/AnimationPlayer
 @onready var hit_box = $HitBox
+@onready var damage_number_origin = $DamageNumberOrigin
 var ice_particles_scene = preload("res://Scenes/ice_particles.tscn")
 # Get the gravity from the project settings to be synced with RigidBody nodes.
 var gravity = ProjectSettings.get_setting("physics/2d/default_gravity")
@@ -19,10 +20,12 @@ func _physics_process(delta):
 
 	move_and_slide()
 	
-func on_hit(dmg, player_node):
+func on_hit(dmg, player_node, is_critical ):
 	if on_hit_bool == false:
 		on_hit_bool = true
 		speed = 0
+		#DamageNumber
+		DamageNumbers.display_number(dmg,damage_number_origin.global_position,is_critical)
 		emit_particles()
 		animation.play("hit")
 		hp -= dmg

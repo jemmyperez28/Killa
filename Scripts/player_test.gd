@@ -15,6 +15,8 @@ var hitted = false
 @export var cap_level = 30
 @export var current_exp = 0
 @onready var hp = maxHealth
+@export var critical_chance = 0.05 #0.05  # Probabilidad de crítico (5%)
+@export var damage_variation = 2  # Variación de daño (+/- 2)
 #Initialize instances
 @onready var hitTimer = $HitTimer
 @onready var blinkTimer = $BlinkTimer
@@ -115,7 +117,10 @@ func _on_hit_box_area_entered(area):
 	#print("entro en contacto con" +str(area))
 	var enemy = area.get_parent()
 	if enemy.has_method("on_hit"):
-		enemy.call("on_hit", sword_damage, self)
+		var result = calculate_damage(sword_damage)
+		var damage = result[0]
+		var is_critical = result[1]
+		enemy.call("on_hit", damage, self, is_critical)
 
 func on_hit(dmg):
 	if not hitted and not invulnerable:
@@ -159,5 +164,14 @@ func level_up():
 	cap_level = int(cap_level * exp_increment_factor)  # Incrementa el cap_level exponencialmente
 	label_level.text = str(level_player)
 	label_basic_damage.text = str(sword_damage)
+	
+func calculate_damage(current_damage):
+	var is_critical = false
+	var random_variation = randi() % (damage_variation * 2 + 1) - damage_variation
+	var damage = current_damage + random_variation
+	if randf() < critical_chance:
+		is_critical = true
+		damage *= 3  # Daño crítico (doble de daño)
+	return [damage, is_critical]
 	
 	

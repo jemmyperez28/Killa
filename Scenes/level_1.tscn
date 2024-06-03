@@ -21,4 +21,4 @@ position = Vector2(131, 212)
 shape = SubResource("WorldBoundaryShape2D_b7417")
 
 [node name="SpawnEnemy" parent="." instance=ExtResource("4_movyg")]
-position = Vector2(38, 46)
+position = Vector2(162, 7)
