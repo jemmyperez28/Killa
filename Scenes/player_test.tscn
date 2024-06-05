@@ -1,12 +1,14 @@
-[gd_scene load_steps=18 format=3 uid="uid://bpwd8fdh01307"]
+[gd_scene load_steps=20 format=3 uid="uid://bpwd8fdh01307"]
 
 [ext_resource type="Script" path="res://Scripts/player_test.gd" id="1_lk18g"]
 [ext_resource type="Texture2D" uid="uid://dtcsuvolfdmus" path="res://assets/sprite_sheets/char_1_no_back_ground_fix.png" id="2_bw24s"]
-[ext_resource type="Texture2D" uid="uid://bfbqm0otwudky" path="res://assets/images/profile_player1.png" id="3_e3ab8"]
-[ext_resource type="Script" path="res://Scripts/health_bar_player_1.gd" id="4_7ed7i"]
-[ext_resource type="Texture2D" uid="uid://mscdm7g7vcwx" path="res://assets/images/barra_fondo.png" id="5_n1vcy"]
-[ext_resource type="Texture2D" uid="uid://b571uvu0diffy" path="res://assets/images/relleno.png" id="6_72f7u"]
+[ext_resource type="Texture2D" uid="uid://jxa8fb6j6qip" path="res://assets/images/profile_player1-2.png" id="3_yoqkn"]
+[ext_resource type="Texture2D" uid="uid://cw0eqnsuebrkf" path="res://assets/images/barra_fondo2.png" id="5_rprva"]
+[ext_resource type="Texture2D" uid="uid://bpk7q3bdr10tv" path="res://assets/images/barra_mascara2.png" id="6_45eft"]
+[ext_resource type="Texture2D" uid="uid://bopejjwmx53wg" path="res://assets/images/relleno2.png" id="7_8gbaf"]
 [ext_resource type="Script" path="res://Scripts/texture_progress_bar_player1.gd" id="7_n7t0n"]
+[ext_resource type="Script" path="res://Scripts/LevelBar.gd" id="9_678yv"]
+[ext_resource type="FontVariation" uid="uid://dxds3j1tnfgsu" path="res://resources/PressStart.tres" id="9_brl7l"]
 
 [sub_resource type="Animation" id="Animation_ux0jw"]
 length = 0.001
@@ -203,29 +205,75 @@ wait_time = 0.05
 [node name="CanvasLayer" type="CanvasLayer" parent="."]
 
 [node name="Sprite2D" type="Sprite2D" parent="CanvasLayer"]
-position = Vector2(18, 17)
-scale = Vector2(0.05, 0.05)
-texture = ExtResource("3_e3ab8")
-
-[node name="ProgressBar" type="ProgressBar" parent="CanvasLayer" node_paths=PackedStringArray("player")]
-visible = false
-offset_left = 37.0
-offset_top = 2.0
-offset_right = 108.0
-offset_bottom = 29.0
-value = 100.0
-script = ExtResource("4_7ed7i")
-player = NodePath("../..")
+position = Vector2(23, 19)
+scale = Vector2(0.09, 0.09)
+texture = ExtResource("3_yoqkn")
 
 [node name="TextureProgressBar" type="TextureProgressBar" parent="CanvasLayer" node_paths=PackedStringArray("player")]
-offset_left = 36.0
-offset_top = 13.0
-offset_right = 724.0
-offset_bottom = 63.0
-scale = Vector2(0.2, 0.2)
-texture_under = ExtResource("5_n1vcy")
-texture_progress = ExtResource("6_72f7u")
+offset_left = 46.0
+offset_top = 7.0
+offset_right = 2811.0
+offset_bottom = 240.0
+scale = Vector2(0.04, 0.04)
+texture_under = ExtResource("5_rprva")
+texture_over = ExtResource("6_45eft")
+texture_progress = ExtResource("7_8gbaf")
 script = ExtResource("7_n7t0n")
+player = NodePath("../..")
+
+[node name="Label_level" type="Label" parent="CanvasLayer"]
+offset_left = 46.0
+offset_top = 29.0
+offset_right = 766.0
+offset_bottom = 549.0
+scale = Vector2(0.05, 0.05)
+theme_override_fonts/font = ExtResource("9_brl7l")
+theme_override_font_sizes/font_size = 100
+text = "Level :
+
+Stats
+
+ATK   :
+DEF   : 
+"
+
+[node name="level" type="Label" parent="CanvasLayer"]
+offset_left = 83.0
+offset_top = 29.0
+offset_right = 233.0
+offset_bottom = 179.0
+scale = Vector2(0.05, 0.05)
+theme_override_font_sizes/font_size = 100
+text = "0"
+
+[node name="debug" type="Label" parent="CanvasLayer"]
+offset_left = 67.0
+offset_top = 75.0
+offset_right = 467.0
+offset_bottom = 225.0
+scale = Vector2(0.05, 0.05)
+theme_override_font_sizes/font_size = 100
+text = "Idle"
+
+[node name="basic_damage" type="Label" parent="CanvasLayer"]
+offset_left = 83.0
+offset_top = 50.0
+offset_right = 233.0
+offset_bottom = 200.0
+scale = Vector2(0.05, 0.05)
+theme_override_font_sizes/font_size = 100
+text = "0"
+
+[node name="LevelBar" type="TextureProgressBar" parent="CanvasLayer" node_paths=PackedStringArray("player")]
+offset_left = 47.0
+offset_top = 18.0
+offset_right = 2812.0
+offset_bottom = 251.0
+scale = Vector2(0.03, 0.03)
+texture_under = ExtResource("5_rprva")
+texture_over = ExtResource("6_45eft")
+texture_progress = ExtResource("7_8gbaf")
+script = ExtResource("9_678yv")
 player = NodePath("../..")
 
 [connection signal="animation_finished" from="Sprite2D/AnimationPlayer" to="." method="_on_animation_player_animation_finished"]
