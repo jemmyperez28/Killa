@@ -439,4 +439,5 @@ layer_0/tile_data = PackedInt32Array(851968, 0, 0, 851969, 0, 0, 851970, 0, 0, 8
 script = ExtResource("5_3hm24")
 
 [node name="Camera2D" type="Camera2D" parent="."]
-position = Vector2(-1, 188)
+position = Vector2(-309, 178)
+zoom = Vector2(0.38, 0.38)

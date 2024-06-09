@@ -4,6 +4,7 @@ var velocidad = 100
 var tile_size = Vector2i(16, 16)  # Tamaño de los tiles, en tu caso 16x16
 var camera_limit_right = 0  # Límite derecho de la cámara, ajusta según sea necesario
 var base_y = 0  # Altura base inicial para agregar nuevos tiles
+var tile_lifetime = 8.0  # Tiempo en segundos antes de eliminar los tiles
 
 func _ready():
 	# Obtén el límite derecho de la cámara (asumiendo que la cámara está centrada en la escena)
@@ -11,6 +12,9 @@ func _ready():
 
 	# Encuentra la altura base de los tiles iniciales
 	base_y = find_base_y()
+	
+	# Configura temporizadores para los tiles iniciales
+	setup_initial_tiles_timers()
 
 func _process(delta):
 	# Mueve el TileMap completo hacia la izquierda
@@ -43,5 +47,25 @@ func add_new_tiles():
 		var cell_position_bottom = Vector2i(start_position + i, base_y + 1)
 		set_cell(0, cell_position_top, 0, Vector2i(0, 0), 0)  # Añade un tile en la nueva posición
 		set_cell(0, cell_position_bottom, 0, Vector2i(1, 0), 0)  # Añade un tile debajo del nuevo tile
-		
-		
+		start_timer_to_remove_tile(cell_position_top)
+		start_timer_to_remove_tile(cell_position_bottom)
+
+func setup_initial_tiles_timers():
+	var used_rect = get_used_rect()
+	for y in range(used_rect.position.y, used_rect.position.y + used_rect.size.y):
+		for x in range(used_rect.position.x, used_rect.position.x + used_rect.size.x):
+			var source_id = get_cell_source_id(0, Vector2i(x, y))
+			if source_id != -1:
+				var cell_position = Vector2i(x, y)
+				start_timer_to_remove_tile(cell_position)
+
+func start_timer_to_remove_tile(cell_position):
+	var timer = Timer.new()
+	timer.wait_time = tile_lifetime
+	timer.one_shot = true
+	timer.connect("timeout", Callable(self, "_on_tile_timeout").bind(cell_position))
+	add_child(timer)
+	timer.start()
+
+func _on_tile_timeout(cell_position):
+	set_cell(0, cell_position, -1)  # Elimina el tile de la posición especificada
