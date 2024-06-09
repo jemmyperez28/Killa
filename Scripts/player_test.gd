@@ -26,6 +26,7 @@ var hitted = false
 @onready var label_level = $CanvasLayer/level
 @onready var label_basic_damage = $CanvasLayer/basic_damage
 @onready var label_debug = $CanvasLayer/debug
+@onready var attack_hitbox = $HitBox/CollisionShape2D
 #Signials
 signal cambio_vida(valor)
 signal set_exp(current_exp,cap_level)
@@ -45,7 +46,6 @@ var state_animations = {
 }
 
 #Check current level for 
-
 func _ready():
 	label_level.text = str(level_player)
 	label_basic_damage.text = str(sword_damage)
@@ -58,7 +58,7 @@ func _physics_process(delta):
 	#print(velocity.x)
 	var state_name = state_animations[current_state] 
 	concatenado = str(state_name) + " " + str(disable_inputs)
-	label_debug.text = str(concatenado) 
+	label_debug.text = str(concatenado)
 	if Input.get_action_strength("restart") : 
 		get_tree().reload_current_scene()
 	# Gravity
@@ -128,6 +128,7 @@ func _on_animation_player_animation_finished(anim_name):
 	elif anim_name == "jump_down" and is_on_floor():
 		current_state = State.RUN  # Transition back to run upon landing
 	elif anim_name == "hit":
+		attack_hitbox.disabled = true
 		if is_on_floor():
 			disable_inputs = false
 			current_state = State.RUN
