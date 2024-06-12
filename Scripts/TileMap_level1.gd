@@ -23,13 +23,14 @@ func check_and_remove_tiles():
 	var used_rect = get_used_rect()
 	for y in range(used_rect.position.y, used_rect.position.y + used_rect.size.y):
 		for x in range(used_rect.position.x, used_rect.position.x + used_rect.size.x):
-			var tile_position = map_to_local(Vector2(x, y))
+			var tile_position = map_to_local(Vector2(x, y)) + position
 			if tile_position.x < eliminar_x:
-				print("elimine?")
 				set_cell(0, Vector2i(x, y), -1)
 
 func add_new_tiles_if_needed():
 	var last_tile_position = map_to_local(Vector2i(get_used_rect().end.x, 0)).x + position.x
+	print("last_tile_position:", last_tile_position)
+	print("viewport_width:", get_viewport_rect().size.x)
 	if last_tile_position < get_viewport_rect().size.x:
 		add_new_tiles()
 
