@@ -5,7 +5,7 @@ var ice_particles_scene = preload("res://Scenes/ice_particles.tscn")
 # Get the gravity from the project settings to be synced with RigidBody nodes.
 var gravity = ProjectSettings.get_setting("physics/2d/default_gravity")
 var speed = 3000
-var hp = 15
+var hp = 10
 var damage = 5
 var on_hit_bool = false
 
