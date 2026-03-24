@@ -55,10 +55,12 @@ func _ready():
 	
 func _physics_process(delta):
 	#DEBUG ZONE
-	print(velocity.x)
+	#print(velocity.x)
 	var state_name = state_animations[current_state] 
 	concatenado = str(state_name) + " " + str(disable_inputs)
 	label_debug.text = str(concatenado) 
+	if Input.get_action_strength("restart") : 
+		get_tree().reload_current_scene()
 	# Gravity
 	var gravity = ProjectSettings.get_setting("physics/2d/default_gravity")
 	velocity.y += gravity * delta
