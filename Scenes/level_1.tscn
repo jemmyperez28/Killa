@@ -1,24 +1,62 @@
-[gd_scene load_steps=5 format=3 uid="uid://d2xuvmt3qc58p"]
+[gd_scene format=3 uid="uid://d2xuvmt3qc58p"]
 
 [ext_resource type="PackedScene" uid="uid://d0tn51esbly0g" path="res://Scenes/Background.tscn" id="1_0t5bx"]
+[ext_resource type="Script" uid="uid://bl53h8ss84e3j" path="res://Scripts/piso_manager_move.gd" id="2_6444e"]
 [ext_resource type="PackedScene" uid="uid://bpwd8fdh01307" path="res://Scenes/player_test.tscn" id="2_rtoe6"]
+[ext_resource type="Texture2D" uid="uid://b7lad16ixu3pw" path="res://assets/images/suelo.png" id="4_7p6j4"]
 [ext_resource type="PackedScene" uid="uid://hgh8ckqtdhfh" path="res://Scenes/spawn_enemy.tscn" id="4_movyg"]
 
-[sub_resource type="WorldBoundaryShape2D" id="WorldBoundaryShape2D_b7417"]
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_xfk5q"]
+size = Vector2(10572.51, 165.00027)
 
-[node name="Level1" type="Node2D"]
+[node name="Level1" type="Node2D" unique_id=2141691904]
 
-[node name="ParallaxBackground" parent="." instance=ExtResource("1_0t5bx")]
+[node name="ParallaxBackground" parent="." unique_id=1288068812 instance=ExtResource("1_0t5bx")]
 
-[node name="player_test" parent="." instance=ExtResource("2_rtoe6")]
+[node name="PisoManagerMove" type="Node2D" parent="." unique_id=248244394]
+script = ExtResource("2_6444e")
+
+[node name="Piso1" type="Sprite2D" parent="PisoManagerMove" unique_id=1642078207]
+position = Vector2(-70, 217)
+scale = Vector2(0.1, 0.1)
+texture = ExtResource("4_7p6j4")
+
+[node name="Piso2" type="Sprite2D" parent="PisoManagerMove" unique_id=113510914]
+position = Vector2(122, 217)
+scale = Vector2(0.1, 0.1)
+texture = ExtResource("4_7p6j4")
+
+[node name="Piso3" type="Sprite2D" parent="PisoManagerMove" unique_id=898805013]
+position = Vector2(314, 217)
+scale = Vector2(0.1, 0.1)
+texture = ExtResource("4_7p6j4")
+
+[node name="Piso4" type="Sprite2D" parent="PisoManagerMove" unique_id=936468768]
+position = Vector2(506, 217)
+scale = Vector2(0.1, 0.1)
+texture = ExtResource("4_7p6j4")
+
+[node name="Piso" type="Node2D" parent="." unique_id=648590251]
+
+[node name="StaticBody2D" type="StaticBody2D" parent="Piso" unique_id=1790330306]
+position = Vector2(20.999985, 214)
+scale = Vector2(0.1, 0.1)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Piso/StaticBody2D" unique_id=898026036]
+texture_repeat = 2
+position = Vector2(2720.0002, -10)
+scale = Vector2(0.9999989, 0.9999989)
+shape = SubResource("RectangleShape2D_xfk5q")
+
+[node name="player_test" parent="." unique_id=2010045972 instance=ExtResource("2_rtoe6")]
 position = Vector2(84, 181)
 collision_layer = 2
 
-[node name="StaticBody2D" type="StaticBody2D" parent="."]
-position = Vector2(131, 212)
+[node name="SpawnEnemy" parent="." unique_id=129695789 instance=ExtResource("4_movyg")]
+position = Vector2(2, 8)
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="StaticBody2D"]
-shape = SubResource("WorldBoundaryShape2D_b7417")
-
-[node name="SpawnEnemy" parent="." instance=ExtResource("4_movyg")]
-position = Vector2(162, 7)
+[node name="Camera2D" type="Camera2D" parent="." unique_id=1692336274]
+position = Vector2(245, 92)
+ignore_rotation = false
+enabled = false
+zoom = Vector2(0.3, 0.3)
