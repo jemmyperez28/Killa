@@ -26,6 +26,8 @@ var hitted = false
 @onready var label_level = $CanvasLayer/level
 @onready var label_basic_damage = $CanvasLayer/basic_damage
 @onready var label_debug = $CanvasLayer/debug
+@onready var attack_sound = $AttackSound
+@onready var damage_sound = $DamageSound
 #Signials
 signal cambio_vida(valor)
 signal set_exp(current_exp,cap_level)
@@ -78,6 +80,7 @@ func _physics_process(delta):
 			velocity.y = JUMP_VELOCITY
 			current_state = State.JUMP
 		elif Input.is_action_just_pressed("attack")  and disable_inputs == false:
+			attack_sound.play()
 			current_state = State.ATTACK
 	else:
 		pass
@@ -146,6 +149,7 @@ func _on_hit_box_area_entered(area):
 func on_hit(dmg):
 	if not hitted and not invulnerable:
 		#print("player on_hit")
+		damage_sound.play()
 		hitted = true
 		invulnerable = true
 		current_state = State.HIT

@@ -1,4 +1,4 @@
-[gd_scene load_steps=5 format=3 uid="uid://d0tn51esbly0g"]
+[gd_scene format=3 uid="uid://d0tn51esbly0g"]
 
 [ext_resource type="Texture2D" uid="uid://5ixrc6c0r6w5" path="res://assets/background_level1/sky.png" id="1_y63g7"]
 [ext_resource type="Texture2D" uid="uid://d0a0nw6vmw7ue" path="res://assets/background_level1/mountains.png" id="2_obl3a"]
@@ -14,30 +14,30 @@ func _ready():
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta):
-	scroll_offset.x -= 40 * delta
+	scroll_offset.x -= 55 * delta
 "
 
-[node name="ParallaxBackground" type="ParallaxBackground"]
+[node name="ParallaxBackground" type="ParallaxBackground" unique_id=1641987175]
 script = SubResource("GDScript_eyi3l")
 
-[node name="Sky" type="Sprite2D" parent="."]
+[node name="Sky" type="Sprite2D" parent="." unique_id=739515624]
 position = Vector2(159, 121)
 texture = ExtResource("1_y63g7")
 
-[node name="Mountains" type="ParallaxLayer" parent="."]
+[node name="Mountains" type="ParallaxLayer" parent="." unique_id=1448598576]
 motion_scale = Vector2(0.6, 0.6)
 motion_mirroring = Vector2(320, 0)
 
-[node name="Sprite2D" type="Sprite2D" parent="Mountains"]
+[node name="Sprite2D" type="Sprite2D" parent="Mountains" unique_id=1843622392]
 position = Vector2(2, 2)
 texture = ExtResource("2_obl3a")
 centered = false
 
-[node name="Trees" type="ParallaxLayer" parent="."]
+[node name="Trees" type="ParallaxLayer" parent="." unique_id=431829207]
 motion_scale = Vector2(4, 4)
 motion_mirroring = Vector2(320, 0)
 
-[node name="Sprite2D" type="Sprite2D" parent="Trees"]
+[node name="Sprite2D" type="Sprite2D" parent="Trees" unique_id=156764873]
 scale = Vector2(1.32917, 1)
 texture = ExtResource("3_5oo34")
 centered = false

@@ -1,0 +1,19 @@
+[remap]
+
+importer="mp3"
+type="AudioStreamMP3"
+uid="uid://bxomfn5sng42l"
+path="res://.godot/imported/attack_voice.mp3-13e6b60c2bdbf8abf73891256d072726.mp3str"
+
+[deps]
+
+source_file="res://assets/sounds music/attack_voice.mp3"
+dest_files=["res://.godot/imported/attack_voice.mp3-13e6b60c2bdbf8abf73891256d072726.mp3str"]
+
+[params]
+
+loop=false
+loop_offset=0
+bpm=0
+beat_count=0
+bar_beats=4

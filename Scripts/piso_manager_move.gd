@@ -1,6 +1,6 @@
 extends Node2D
 
-@export var velocidad: float = 200.0
+@export var velocidad: float = 300.0
 @export var y_fija: float = 200
 @onready var pisos: Array[Sprite2D] = [
 	$Piso1,
