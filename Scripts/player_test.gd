@@ -19,6 +19,7 @@ var cap_level: int = 30
 @onready var hp = maxHealth
 @export var critical_chance = 0.05 #0.05  # Probabilidad de crítico (5%)
 @export var damage_variation = 2  # Variación de daño (+/- 2)
+@export var fire_damage = 50
 #Initialize instances
 @onready var hitTimer = $HitTimer
 @onready var blinkTimer = $BlinkTimer
@@ -30,6 +31,7 @@ var cap_level: int = 30
 @onready var label_debug = $CanvasLayer/debug
 @onready var attack_sound = $AttackSound
 @onready var damage_sound = $DamageSound
+
 #Signials
 signal cambio_vida(valor)
 signal set_exp(current_exp,cap_level)
@@ -48,7 +50,7 @@ var state_animations = {
 	State.HIT: "hit"
 }
 
-#Check current level for 
+
 
 func _ready():
 	label_level.text = str(level_player)

@@ -5,10 +5,14 @@
 [ext_resource type="Texture2D" uid="uid://b0vteqnj4fqjn" path="res://assets/images/aura_fuegol.png" id="2_ve6vs"]
 [ext_resource type="Script" uid="uid://dlr2hcun3wju" path="res://Scripts/fire_power.gd" id="3_8dx66"]
 [ext_resource type="Texture2D" uid="uid://jxa8fb6j6qip" path="res://assets/images/profile_player1-2.png" id="3_yoqkn"]
+[ext_resource type="AudioStream" uid="uid://bxj58rt0m44d8" path="res://assets/sounds music/fire1.ogg" id="4_prfrf"]
+[ext_resource type="AudioStream" uid="uid://q46m8e56dn4" path="res://assets/sounds music/fire2.ogg" id="5_67lvd"]
 [ext_resource type="Texture2D" uid="uid://cw0eqnsuebrkf" path="res://assets/images/barra_fondo2.png" id="5_rprva"]
 [ext_resource type="Texture2D" uid="uid://bpk7q3bdr10tv" path="res://assets/images/barra_mascara2.png" id="6_45eft"]
+[ext_resource type="Texture2D" uid="uid://i8aui28u8lq1" path="res://assets/images/fire_spirit.png" id="6_67lvd"]
 [ext_resource type="Texture2D" uid="uid://bopejjwmx53wg" path="res://assets/images/relleno2.png" id="7_8gbaf"]
 [ext_resource type="Script" uid="uid://b4aamhq6yjmjv" path="res://Scripts/texture_progress_bar_player1.gd" id="7_n7t0n"]
+[ext_resource type="Script" uid="uid://dsw8mv02a7g2e" path="res://Scripts/fire_spirit.gd" id="7_sduab"]
 [ext_resource type="Script" uid="uid://b4oabuaue5qsk" path="res://Scripts/LevelBar.gd" id="9_678yv"]
 [ext_resource type="FontVariation" uid="uid://dxds3j1tnfgsu" path="res://resources/PressStart.tres" id="9_brl7l"]
 [ext_resource type="AudioStream" uid="uid://bxomfn5sng42l" path="res://assets/sounds music/attack_voice.mp3" id="10_lbtjm"]
@@ -77,6 +81,44 @@ _data = {
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_67lvd"]
 radius = 344.99997
+
+[sub_resource type="Animation" id="Animation_sduab"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".:frame")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [0]
+}
+
+[sub_resource type="Animation" id="Animation_tvrp7"]
+resource_name = "idle"
+length = 0.13333334
+loop_mode = 1
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".:frame")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.033333335, 0.06666667, 0.10000001),
+"transitions": PackedFloat32Array(1, 1, 1, 1),
+"update": 1,
+"values": [0, 1, 2, 3]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_1klfb"]
+_data = {
+&"RESET": SubResource("Animation_sduab"),
+&"idle": SubResource("Animation_tvrp7")
+}
 
 [sub_resource type="Animation" id="Animation_ux0jw"]
 length = 0.001
@@ -245,6 +287,25 @@ position = Vector2(-70, 0)
 shape = SubResource("CircleShape2D_67lvd")
 disabled = true
 
+[node name="Fire1" type="AudioStreamPlayer2D" parent="FirePower" unique_id=258725222]
+stream = ExtResource("4_prfrf")
+volume_db = -6.386
+
+[node name="Fire2" type="AudioStreamPlayer2D" parent="FirePower" unique_id=1245069101]
+stream = ExtResource("5_67lvd")
+volume_db = -6.386
+
+[node name="FireSpirit" type="Sprite2D" parent="." unique_id=716754506]
+position = Vector2(-20, -20)
+scale = Vector2(0.3, 0.3)
+texture = ExtResource("6_67lvd")
+hframes = 4
+script = ExtResource("7_sduab")
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="FireSpirit" unique_id=778161404]
+libraries/ = SubResource("AnimationLibrary_1klfb")
+speed_scale = 0.2
+
 [node name="Sprite2D" type="Sprite2D" parent="." unique_id=2097766363]
 scale = Vector2(0.15, 0.15)
 texture = ExtResource("2_bw24s")
@@ -380,6 +441,7 @@ stream = ExtResource("11_0asfq")
 volume_db = 10.035
 
 [connection signal="animation_finished" from="FirePower/AnimationPlayer" to="FirePower" method="_on_animation_player_animation_finished"]
+[connection signal="area_entered" from="FirePower/HitBox" to="FirePower" method="_on_hit_box_area_entered"]
 [connection signal="animation_finished" from="Sprite2D/AnimationPlayer" to="." method="_on_animation_player_animation_finished"]
 [connection signal="area_entered" from="HitBox" to="." method="_on_hit_box_area_entered"]
 [connection signal="timeout" from="HitTimer" to="." method="_on_hit_timer_timeout"]
