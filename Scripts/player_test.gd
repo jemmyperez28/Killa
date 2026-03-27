@@ -9,11 +9,12 @@ const JUMP_VELOCITY = -250.0
 var invulnerable = false
 var hitted = false
 #Affected by level values
-@export var exp_increment_factor = 1.5
 @export var level_player = 1
 @export var sword_damage = 5
 @export var maxHealth = 30
-@export var cap_level = 30
+@export var base_cap_level = 30
+var cap_level: int = 30
+@export var exp_increment_factor = 1.18
 @export var current_exp = 0
 @onready var hp = maxHealth
 @export var critical_chance = 0.05 #0.05  # Probabilidad de crítico (5%)
@@ -23,6 +24,7 @@ var hitted = false
 @onready var blinkTimer = $BlinkTimer
 @onready var playerHurtBox = $HurtBox
 @onready var sprite = $Sprite2D
+@onready var fire_attack = $FirePower
 @onready var label_level = $CanvasLayer/level
 @onready var label_basic_damage = $CanvasLayer/basic_damage
 @onready var label_debug = $CanvasLayer/debug
@@ -53,9 +55,14 @@ func _ready():
 	label_basic_damage.text = str(sword_damage)
 	current_state = State.IDLE
 	cambio_vida.emit()
+	cap_level = get_cap_for_level(level_player)
 	set_exp.emit(current_exp, cap_level)
 	
 func _physics_process(delta):
+	if Input.get_action_strength("fire") : 
+		fire_attack.cast()
+	if Input.get_action_strength("fire_power") : 
+		get_tree().reload_current_scene()
 	#DEBUG ZONE
 	#print(velocity.x)
 	var state_name = state_animations[current_state] 
@@ -121,7 +128,10 @@ func _physics_process(delta):
 	#print("monitoring: ", playerHurtBox.monitoring)
 	#print(invulnerable)
 	#debug
-	
+
+func get_cap_for_level(nivel: int) -> int:
+	return int((base_cap_level + nivel * 8) * pow(exp_increment_factor, nivel - 1))
+
 func _on_animation_player_animation_finished(anim_name):
 	if anim_name == "attack":
 		disable_inputs = false
@@ -176,17 +186,23 @@ func _on_blink_timer_timeout():
 	else:
 		sprite.show()
 
+#func get_exp(exp):
+#	current_exp += exp
+#	if current_exp > cap_level:
+#		level_up()
+#	set_exp.emit(current_exp, cap_level)
+
 func get_exp(exp):
 	current_exp += exp
-	if current_exp > cap_level:
+	while current_exp >= cap_level:
 		level_up()
 	set_exp.emit(current_exp, cap_level)
 	
 func level_up():
 	level_player = level_player + 1 
-	sword_damage = sword_damage + 3
+	sword_damage = sword_damage + 4
 	current_exp = current_exp - cap_level
-	cap_level = int(cap_level * exp_increment_factor)  # Incrementa el cap_level exponencialmente
+	cap_level = get_cap_for_level(level_player)  # Incrementa el cap_level exponencialmente
 	label_level.text = str(level_player)
 	label_basic_damage.text = str(sword_damage)
 	

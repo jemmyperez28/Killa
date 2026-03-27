@@ -1,68 +1,110 @@
 extends CharacterBody2D
+
 @onready var animation = $Sprite2D/AnimationPlayer
 @onready var hit_box = $HitBox
 @onready var damage_number_origin = $DamageNumberOrigin
+@onready var health_bar: ProgressBar = $HealthBar
+@onready var level_label = $LevelLabel
+
 var ice_particles_scene = preload("res://Scenes/ice_particles.tscn")
-# Get the gravity from the project settings to be synced with RigidBody nodes.
+
 var gravity = ProjectSettings.get_setting("physics/2d/default_gravity")
-var speed = 3000
-var hp = 10
-var damage = 5
-var give_exp = 10
+var speed = 3000.0
+
+# Stats Variables
+var level: int = 1
+
+@export var base_hp: float = 10.0
+@export var base_damage: float = 5.0
+@export var base_give_exp: float = 10.0
+
+# Factores de crecimiento
+@export var hp_growth: float = 1.35
+@export var damage_growth: float = 1.14
+@export var exp_growth: float = 1.25
+
+# Stats finales
+var hp: float = 0.0
+var max_hp: float = 0.0
+var damage: float = 0.0
+var give_exp: float = 0.0
+
 var on_hit_bool = false
 
-func _ready():
-	animation.play("idle")
+# FUNCION DE SETEO DE NIVEL
+func set_level(nivel: int) -> void:
+	level = max(nivel, 1)
+	if is_node_ready():
+		apply_level_stats()
 
-func _physics_process(delta):
-	velocity.x = -speed * delta
-	velocity.y += gravity * delta
+# FUNCION QUE APLICA LOS STATS SEGUN EL NIVEL
+func apply_level_stats() -> void:
+	var lvl_factor: int = max(level - 1, 0)
 
-	move_and_slide()
+	max_hp = base_hp * pow(hp_growth, lvl_factor)
+	hp = max_hp
+	damage = base_damage * pow(damage_growth, lvl_factor)
+	give_exp = base_give_exp * pow(exp_growth, lvl_factor)
+
+	hp = round(hp)
+	max_hp = round(max_hp)
+	damage = round(damage)
+	give_exp = round(give_exp)
+
+	health_bar.max_value = max_hp
+	health_bar.value = hp
 	
-func on_hit(dmg, player_node, is_critical ):
+	level_label.text = str(level)
+
+func on_hit(dmg, player_node, is_critical) -> void:
 	if on_hit_bool == false:
 		on_hit_bool = true
 		speed = 0
-		#DamageNumber
-		DamageNumbers.display_number(dmg,damage_number_origin.global_position,is_critical)
+
+		DamageNumbers.display_number(dmg, damage_number_origin.global_position, is_critical)
 		emit_particles()
 		animation.play("hit")
+
 		hp -= dmg
+		health_bar.value = hp
+
 		if hp <= 0:
 			if player_node.has_method("get_exp"):
 				player_node.call("get_exp", give_exp)
 			destroy()
 
-func destroy():
+func destroy() -> void:
 	queue_free()
 
-func _on_animation_player_animation_finished(anim_name):
+func _on_animation_player_animation_finished(anim_name) -> void:
 	if anim_name == "hit":
 		speed = 3000
 		on_hit_bool = false
 		animation.play("idle")
-		#Emision de particulas
 
-func emit_particles():
-	# Instanciar el nodo de partículas
-	var ice_particles = ice_particles_scene.instantiate()  
-	# Añadir el nodo de partículas como hijo del nodo actual (el enemigo)
+func emit_particles() -> void:
+	var ice_particles = ice_particles_scene.instantiate()
 	add_child(ice_particles)
-	# Posicionar el nodo de partículas en la posición del enemigo
 	ice_particles.global_position = global_position
-	# Emitir partículas
 	ice_particles.emitting = true
 	ice_particles.restart()
-	
-	# Detener la emisión después de un breve período
+
 	await get_tree().create_timer(0.1).timeout
 	ice_particles.emitting = false
-	# Opcional: Eliminar el nodo de partículas después de un tiempo para limpiar la escena
+
 	await get_tree().create_timer(ice_particles.lifetime).timeout
 	ice_particles.queue_free()
 
-func _on_hit_box_area_entered(area):
+func _on_hit_box_area_entered(area) -> void:
 	var player = area.get_parent()
 	if player.has_method("on_hit") and not player.hitted and not player.invulnerable:
 		player.call("on_hit", damage)
+
+func _ready() -> void:
+	apply_level_stats()
+	animation.play("idle")
+
+func _physics_process(delta) -> void:
+	velocity.x = -speed * delta
+	velocity.y += gravity * delta
+	move_and_slide()
