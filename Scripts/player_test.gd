@@ -31,6 +31,9 @@ var cap_level: int = 30
 @onready var label_debug = $CanvasLayer/debug
 @onready var attack_sound = $AttackSound
 @onready var damage_sound = $DamageSound
+var fireball_scene = preload("res://Scenes/fire_ball_master.tscn")
+
+
 
 #Signials
 signal cambio_vida(valor)
@@ -50,8 +53,6 @@ var state_animations = {
 	State.HIT: "hit"
 }
 
-
-
 func _ready():
 	label_level.text = str(level_player)
 	label_basic_damage.text = str(sword_damage)
@@ -61,9 +62,11 @@ func _ready():
 	set_exp.emit(current_exp, cap_level)
 	
 func _physics_process(delta):
+	if Input.is_action_just_pressed("fireball"):
+		shoot_fireball()
 	if Input.get_action_strength("fire") : 
 		fire_attack.cast()
-	if Input.get_action_strength("fire_power") : 
+	if Input.get_action_strength("restart") : 
 		get_tree().reload_current_scene()
 	#DEBUG ZONE
 	#print(velocity.x)
@@ -217,4 +220,10 @@ func calculate_damage(current_damage):
 		damage *= 3  # Daño crítico (doble de daño)
 	return [damage, is_critical]
 	
+func shoot_fireball():
+	var fireball_instance = fireball_scene.instantiate()
+	fireball_instance.global_position = global_position
+	fireball_instance.direction = 1
+	fireball_instance.player = self
+	get_tree().current_scene.add_child(fireball_instance)
 	
