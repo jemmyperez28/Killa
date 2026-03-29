@@ -1,0 +1,17 @@
+[gd_scene format=3 uid="uid://bbjrqg8x6rw0y"]
+
+[ext_resource type="Script" uid="uid://ccn4ys17gccx6" path="res://Scripts/spawn_undead.gd" id="1_7itnm"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_555sv"]
+size = Vector2(47, 31)
+
+[node name="Area2D" type="Area2D" unique_id=2057196549]
+script = ExtResource("1_7itnm")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=1883362209]
+position = Vector2(4, -1)
+shape = SubResource("RectangleShape2D_555sv")
+
+[node name="Timer" type="Timer" parent="." unique_id=761223733]
+
+[connection signal="timeout" from="Timer" to="." method="_on_timer_timeout"]

@@ -31,8 +31,10 @@ var cap_level: int = 30
 @onready var label_level = $CanvasLayer/level
 @onready var label_basic_damage = $CanvasLayer/basic_damage
 @onready var label_debug = $CanvasLayer/debug
+#SOUNDS
 @onready var attack_sound = $AttackSound
 @onready var damage_sound = $DamageSound
+@onready var no_mana = $NoManaSound
 var fireball_scene = preload("res://Scenes/fire_ball_master.tscn")
 
 #Signials
@@ -65,11 +67,19 @@ func _ready():
 	
 func _physics_process(delta):
 	if Input.is_action_just_pressed("fireball"):
-		shoot_fireball()
+		if mp >= 2:
+			shoot_fireball()
+			use_mana(2)
+		else:
+			no_mana.play()
+			DamageNumbers.display_text("NO MANA", global_position + Vector2(-15, -20), "#4CC9FF")
 	if Input.is_action_just_pressed("fire"):
 		if mp >= 10:
 			fire_attack.cast()
 			use_mana(10)
+		else:
+			no_mana.play()
+			DamageNumbers.display_text("NO MANA", global_position + Vector2(-15, -20), "#4CC9FF")
 	if Input.get_action_strength("restart") : 
 		get_tree().reload_current_scene()
 	#DEBUG ZONE

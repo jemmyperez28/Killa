@@ -19,6 +19,7 @@
 [ext_resource type="Texture2D" uid="uid://rg5gbg5bhaem" path="res://assets/images/mana_relleno2.png" id="13_1klfb"]
 [ext_resource type="Script" uid="uid://bcdlahy7ykemf" path="res://Scripts/mana_progress_bar.gd" id="14_1klfb"]
 [ext_resource type="Texture2D" uid="uid://cq1b02o71n0sc" path="res://assets/images/exp_relleno.png" id="16_1klfb"]
+[ext_resource type="AudioStream" uid="uid://cbgys135ksj7s" path="res://assets/sounds music/no_mana.mp3" id="20_oy2dr"]
 
 [sub_resource type="Animation" id="Animation_8dx66"]
 length = 0.001
@@ -461,6 +462,10 @@ volume_db = 11.37
 [node name="DamageSound" type="AudioStreamPlayer2D" parent="." unique_id=858449094]
 stream = ExtResource("11_0asfq")
 volume_db = 10.035
+
+[node name="NoManaSound" type="AudioStreamPlayer2D" parent="." unique_id=486036013]
+stream = ExtResource("20_oy2dr")
+volume_db = -7.298
 
 [connection signal="animation_finished" from="FirePower/AnimationPlayer" to="FirePower" method="_on_animation_player_animation_finished"]
 [connection signal="area_entered" from="FirePower/HitBox" to="FirePower" method="_on_hit_box_area_entered"]

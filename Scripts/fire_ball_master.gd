@@ -1,5 +1,5 @@
 extends Area2D
-
+@onready var audio = $AudioStreamPlayer2D
 var player = null
 
 var speed: float = 350.0
@@ -8,7 +8,7 @@ var fire_damage = 20
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
 	print("fireball creado")
-	pass # Replace with function body.
+	audio.play()
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta: float) -> void:

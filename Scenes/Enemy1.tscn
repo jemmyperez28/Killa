@@ -195,9 +195,9 @@ theme_override_font_sizes/font_size = 4
 horizontal_alignment = 1
 
 [node name="Label" type="Label" parent="." unique_id=1794682412]
-offset_left = -22.0
+offset_left = -17.0
 offset_top = -24.0
-offset_right = -2.0
+offset_right = 7.0
 offset_bottom = -16.0
 theme_override_font_sizes/font_size = 4
 text = "lvl : "
