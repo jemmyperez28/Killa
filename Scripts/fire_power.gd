@@ -25,6 +25,7 @@ func cast() -> void:
 		fire1_sound.play()
 	else:
 		fire2_sound.play()
+	
 
 func _on_animation_player_animation_finished(anim_name: String) -> void:
 	if anim_name == "fire_idle":

@@ -13,10 +13,12 @@ var hitted = false
 @export var sword_damage = 5
 @export var maxHealth = 30
 @export var base_cap_level = 30
+@export var maxMP = 30
 var cap_level: int = 30
 @export var exp_increment_factor = 1.18
 @export var current_exp = 0
 @onready var hp = maxHealth
+@onready var mp = maxMP
 @export var critical_chance = 0.05 #0.05  # Probabilidad de crítico (5%)
 @export var damage_variation = 2  # Variación de daño (+/- 2)
 @export var fire_damage = 50
@@ -33,10 +35,9 @@ var cap_level: int = 30
 @onready var damage_sound = $DamageSound
 var fireball_scene = preload("res://Scenes/fire_ball_master.tscn")
 
-
-
 #Signials
 signal cambio_vida(valor)
+signal cambio_mana(valor)
 signal set_exp(current_exp,cap_level)
 
 #DEBUG ZONE
@@ -58,14 +59,17 @@ func _ready():
 	label_basic_damage.text = str(sword_damage)
 	current_state = State.IDLE
 	cambio_vida.emit()
+	cambio_mana.emit()
 	cap_level = get_cap_for_level(level_player)
 	set_exp.emit(current_exp, cap_level)
 	
 func _physics_process(delta):
 	if Input.is_action_just_pressed("fireball"):
 		shoot_fireball()
-	if Input.get_action_strength("fire") : 
-		fire_attack.cast()
+	if Input.is_action_just_pressed("fire"):
+		if mp >= 10:
+			fire_attack.cast()
+			use_mana(10)
 	if Input.get_action_strength("restart") : 
 		get_tree().reload_current_scene()
 	#DEBUG ZONE
@@ -73,8 +77,6 @@ func _physics_process(delta):
 	var state_name = state_animations[current_state] 
 	concatenado = str(state_name) + " " + str(disable_inputs)
 	label_debug.text = str(concatenado) 
-	if Input.get_action_strength("restart") : 
-		get_tree().reload_current_scene()
 	# Gravity
 	var gravity = ProjectSettings.get_setting("physics/2d/default_gravity")
 	velocity.y += gravity * delta
@@ -160,6 +162,10 @@ func _on_hit_box_area_entered(area):
 		var damage = result[0]
 		var is_critical = result[1]
 		enemy.call("on_hit", damage, self, is_critical)
+
+func use_mana(mana):
+	mp -= mana
+	cambio_mana.emit()
 
 func on_hit(dmg):
 	if not hitted and not invulnerable:

@@ -10,13 +10,15 @@
 [ext_resource type="Texture2D" uid="uid://cw0eqnsuebrkf" path="res://assets/images/barra_fondo2.png" id="5_rprva"]
 [ext_resource type="Texture2D" uid="uid://bpk7q3bdr10tv" path="res://assets/images/barra_mascara2.png" id="6_45eft"]
 [ext_resource type="Texture2D" uid="uid://i8aui28u8lq1" path="res://assets/images/fire_spirit.png" id="6_67lvd"]
-[ext_resource type="Texture2D" uid="uid://bopejjwmx53wg" path="res://assets/images/relleno2.png" id="7_8gbaf"]
 [ext_resource type="Script" uid="uid://b4aamhq6yjmjv" path="res://Scripts/texture_progress_bar_player1.gd" id="7_n7t0n"]
 [ext_resource type="Script" uid="uid://dsw8mv02a7g2e" path="res://Scripts/fire_spirit.gd" id="7_sduab"]
 [ext_resource type="Script" uid="uid://b4oabuaue5qsk" path="res://Scripts/LevelBar.gd" id="9_678yv"]
 [ext_resource type="FontVariation" uid="uid://dxds3j1tnfgsu" path="res://resources/PressStart.tres" id="9_brl7l"]
 [ext_resource type="AudioStream" uid="uid://bxomfn5sng42l" path="res://assets/sounds music/attack_voice.mp3" id="10_lbtjm"]
 [ext_resource type="AudioStream" uid="uid://b8dwvygmfqhwk" path="res://assets/sounds music/damage_1.ogg" id="11_0asfq"]
+[ext_resource type="Texture2D" uid="uid://rg5gbg5bhaem" path="res://assets/images/mana_relleno2.png" id="13_1klfb"]
+[ext_resource type="Script" uid="uid://bcdlahy7ykemf" path="res://Scripts/mana_progress_bar.gd" id="14_1klfb"]
+[ext_resource type="Texture2D" uid="uid://cq1b02o71n0sc" path="res://assets/images/exp_relleno.png" id="16_1klfb"]
 
 [sub_resource type="Animation" id="Animation_8dx66"]
 length = 0.001
@@ -262,6 +264,12 @@ height = 32.0003
 radius = 17.0
 height = 40.0
 
+[sub_resource type="CompressedTexture2D" id="CompressedTexture2D_sduab"]
+load_path = "res://.godot/imported/relleno2.png-39e9e72c791ec09f13d0a940ea5c5ba5.ctex"
+
+[sub_resource type="CompressedTexture2D" id="CompressedTexture2D_tvrp7"]
+load_path = "res://.godot/imported/barra_mascara2.png-bfefd0b44b11dcff8e4fd07a78145fbf.ctex"
+
 [node name="player_test" type="CharacterBody2D" unique_id=1590612298]
 collision_layer = 3
 collision_mask = 7
@@ -362,15 +370,27 @@ offset_bottom = 254.0
 scale = Vector2(0.04, 0.04)
 texture_under = ExtResource("5_rprva")
 texture_over = ExtResource("6_45eft")
-texture_progress = ExtResource("7_8gbaf")
+texture_progress = SubResource("CompressedTexture2D_sduab")
 script = ExtResource("7_n7t0n")
 player = NodePath("../..")
 
+[node name="ManaProgressBar" type="TextureProgressBar" parent="CanvasLayer" unique_id=1106879010 node_paths=PackedStringArray("player")]
+offset_left = 63.0
+offset_top = 17.0
+offset_right = 2838.0
+offset_bottom = 265.0
+scale = Vector2(0.04, 0.04)
+texture_under = ExtResource("5_rprva")
+texture_over = SubResource("CompressedTexture2D_tvrp7")
+texture_progress = ExtResource("13_1klfb")
+script = ExtResource("14_1klfb")
+player = NodePath("../..")
+
 [node name="Label_level" type="Label" parent="CanvasLayer" unique_id=1884011068]
-offset_left = 48.0
-offset_top = 30.0
-offset_right = 848.0
-offset_bottom = 748.0
+offset_left = 41.0
+offset_top = 46.0
+offset_right = 841.0
+offset_bottom = 764.0
 scale = Vector2(0.05, 0.05)
 theme_override_fonts/font = ExtResource("9_brl7l")
 theme_override_font_sizes/font_size = 100
@@ -381,10 +401,10 @@ ATK   :
 "
 
 [node name="level" type="Label" parent="CanvasLayer" unique_id=1647817522]
-offset_left = 83.0
-offset_top = 29.0
-offset_right = 233.0
-offset_bottom = 179.0
+offset_left = 77.0
+offset_top = 46.0
+offset_right = 227.0
+offset_bottom = 196.0
 scale = Vector2(0.05, 0.05)
 theme_override_font_sizes/font_size = 100
 text = "0"
@@ -399,23 +419,23 @@ theme_override_font_sizes/font_size = 100
 text = "Idle"
 
 [node name="basic_damage" type="Label" parent="CanvasLayer" unique_id=370812261]
-offset_left = 83.0
-offset_top = 44.0
-offset_right = 233.0
-offset_bottom = 194.0
+offset_left = 77.0
+offset_top = 61.0
+offset_right = 227.0
+offset_bottom = 211.0
 scale = Vector2(0.05, 0.05)
 theme_override_font_sizes/font_size = 100
 text = "0"
 
 [node name="LevelBar" type="TextureProgressBar" parent="CanvasLayer" unique_id=404078040 node_paths=PackedStringArray("player")]
-offset_left = 63.0
-offset_top = 17.000002
-offset_right = 2896.333
-offset_bottom = 265.0
+offset_left = 64.0
+offset_top = 28.0
+offset_right = 3064.0
+offset_bottom = 276.0
 scale = Vector2(0.03, 0.03)
 texture_under = ExtResource("5_rprva")
 texture_over = ExtResource("6_45eft")
-texture_progress = ExtResource("7_8gbaf")
+texture_progress = ExtResource("16_1klfb")
 script = ExtResource("9_678yv")
 player = NodePath("../..")
 
@@ -428,6 +448,8 @@ scale = Vector2(0.05, 0.05)
 theme_override_fonts/font = ExtResource("9_brl7l")
 theme_override_font_sizes/font_size = 100
 text = "HP:
+
+MP:
 
 exp:
 "

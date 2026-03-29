@@ -17,9 +17,7 @@ func _process(delta: float) -> void:
 func _on_area_entered(area: Area2D) -> void:
 	print("colision con: ", area.name)
 	var enemy = area.get_parent()
-	print("CHOQUE2")
 	if enemy.has_method("on_hit") and player != null:
-		print("CHOQUE1")
 		var result = player.calculate_damage(fire_damage)
 		var damage = result[0]
 		var is_critical = result[1]
