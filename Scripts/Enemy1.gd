@@ -7,6 +7,11 @@ extends CharacterBody2D
 @onready var level_label = $LevelLabel
 
 var ice_particles_scene = preload("res://Scenes/ice_particles.tscn")
+var hp_potion_scene = preload("res://Scenes/hp_potion.tscn")
+var mp_potion_scene = preload("res://Scenes/mp_potion.tscn")
+
+@export var drop_chance: float = 0.3
+@export var hp_drop_weight: float = 1.0
 
 var gravity = ProjectSettings.get_setting("physics/2d/default_gravity")
 var speed = 3000.0
@@ -69,12 +74,27 @@ func on_hit(dmg, player_node, is_critical) -> void:
 		health_bar.value = hp
 
 		if hp <= 0:
-			if player_node.has_method("get_exp"):
+			if player_node != null and player_node.has_method("get_exp"):
 				player_node.call("get_exp", give_exp)
+			else:
+				pass
 			destroy()
 
+
 func destroy() -> void:
+	drop_potion()
 	queue_free()
+
+func drop_potion() -> void:
+	if randf() > drop_chance:
+		return
+	var potion
+	if randf() < hp_drop_weight:
+		potion = hp_potion_scene.instantiate()
+	else:
+		potion = mp_potion_scene.instantiate()
+	potion.global_position = global_position
+	get_tree().current_scene.add_child(potion)
 
 func _on_animation_player_animation_finished(anim_name) -> void:
 	if anim_name == "hit":
@@ -97,7 +117,7 @@ func emit_particles() -> void:
 
 func _on_hit_box_area_entered(area) -> void:
 	var player = area.get_parent()
-	if player.has_method("on_hit") and not player.hitted and not player.invulnerable:
+	if player.is_in_group("player") and player.has_method("on_hit") and not player.hitted and not player.invulnerable:
 		player.call("on_hit", damage)
 
 func _ready() -> void:

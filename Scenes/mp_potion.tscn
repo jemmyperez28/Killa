@@ -1,0 +1,33 @@
+[gd_scene format=3 uid="uid://cgwd1a7hchod1"]
+
+[ext_resource type="Script" uid="uid://nx0vp05lya7a" path="res://Scripts/potion.gd" id="1_ocf5u"]
+[ext_resource type="Texture2D" uid="uid://dujg0u86pvrb1" path="res://assets/images/mp.png" id="2_lvydq"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_ygup6"]
+size = Vector2(10, 11)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_js8mp"]
+size = Vector2(10, 11)
+
+[node name="MpPotion" type="CharacterBody2D" unique_id=1006320146]
+collision_layer = 0
+script = ExtResource("1_ocf5u")
+potion_type = 1
+
+[node name="Sprite2D" type="Sprite2D" parent="." unique_id=1003622453]
+scale = Vector2(0.3, 0.3)
+texture = ExtResource("2_lvydq")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=219337625]
+position = Vector2(-1, 0.5)
+shape = SubResource("RectangleShape2D_ygup6")
+
+[node name="Area2D" type="Area2D" parent="." unique_id=756109745]
+collision_layer = 0
+collision_mask = 2
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Area2D" unique_id=158748486]
+position = Vector2(-1, 0.5)
+shape = SubResource("RectangleShape2D_js8mp")
+
+[connection signal="area_entered" from="Area2D" to="." method="_on_area_2d_area_entered"]

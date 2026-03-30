@@ -35,7 +35,7 @@ func _on_animation_player_animation_finished(anim_name: String) -> void:
 
 func _on_hit_box_area_entered(area: Area2D) -> void:
 	var enemy = area.get_parent()
-
+	print("[FIRE POWER] golpeó a: ", enemy.name)
 	if enemy.has_method("on_hit"):
 		var result = player.calculate_damage(player.fire_damage)
 		var damage = result[0]

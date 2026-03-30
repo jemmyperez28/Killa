@@ -149,6 +149,30 @@ tracks/1/keys = {
 "update": 1,
 "values": [true]
 }
+tracks/2/type = "value"
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/path = NodePath(".:frame")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [45]
+}
+tracks/3/type = "value"
+tracks/3/imported = false
+tracks/3/enabled = true
+tracks/3/path = NodePath("../HitBoxAir/CollisionShape2D:disabled")
+tracks/3/interp = 1
+tracks/3/loop_wrap = true
+tracks/3/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [true]
+}
 
 [sub_resource type="Animation" id="Animation_hutc6"]
 resource_name = "attack"
@@ -172,10 +196,38 @@ tracks/1/path = NodePath("../HitBox/CollisionShape2D:disabled")
 tracks/1/interp = 1
 tracks/1/loop_wrap = true
 tracks/1/keys = {
-"times": PackedFloat32Array(0, 0.2, 0.26666668, 0.33333334),
-"transitions": PackedFloat32Array(1, 1, 1, 1),
+"times": PackedFloat32Array(0, 0.2, 0.3),
+"transitions": PackedFloat32Array(1, 1, 1),
 "update": 1,
-"values": [true, false, false, true]
+"values": [true, false, true]
+}
+
+[sub_resource type="Animation" id="Animation_oy2dr"]
+resource_name = "attack_air"
+length = 0.63
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".:frame")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.099999994, 0.2, 0.3, 0.4, 0.5),
+"transitions": PackedFloat32Array(1, 1, 1, 1, 1, 1),
+"update": 1,
+"values": [44, 45, 46, 47, 48, 49]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("../HitBoxAir/CollisionShape2D:disabled")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0, 0.1, 0.3),
+"transitions": PackedFloat32Array(1, 1, 1),
+"update": 1,
+"values": [true, false, true]
 }
 
 [sub_resource type="Animation" id="Animation_grw78"]
@@ -247,6 +299,7 @@ tracks/0/keys = {
 _data = {
 &"RESET": SubResource("Animation_ux0jw"),
 &"attack": SubResource("Animation_hutc6"),
+&"attack_air": SubResource("Animation_oy2dr"),
 &"hit": SubResource("Animation_grw78"),
 &"jump_down": SubResource("Animation_20w3m"),
 &"jump_up": SubResource("Animation_kth8f"),
@@ -265,13 +318,17 @@ height = 32.0003
 radius = 17.0
 height = 40.0
 
+[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_g3wa8"]
+radius = 31.0
+height = 62.0
+
 [sub_resource type="CompressedTexture2D" id="CompressedTexture2D_sduab"]
 load_path = "res://.godot/imported/relleno2.png-39e9e72c791ec09f13d0a940ea5c5ba5.ctex"
 
 [sub_resource type="CompressedTexture2D" id="CompressedTexture2D_tvrp7"]
 load_path = "res://.godot/imported/barra_mascara2.png-bfefd0b44b11dcff8e4fd07a78145fbf.ctex"
 
-[node name="player_test" type="CharacterBody2D" unique_id=1590612298]
+[node name="player_test" type="CharacterBody2D" unique_id=1590612298 groups=["player"]]
 collision_layer = 3
 collision_mask = 7
 script = ExtResource("1_lk18g")
@@ -320,6 +377,7 @@ scale = Vector2(0.15, 0.15)
 texture = ExtResource("2_bw24s")
 hframes = 10
 vframes = 6
+frame = 45
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="Sprite2D" unique_id=970719747]
 libraries/ = SubResource("AnimationLibrary_wkf4v")
@@ -348,6 +406,16 @@ collision_mask = 16
 position = Vector2(-15, 4)
 shape = SubResource("CapsuleShape2D_2hvdk")
 debug_color = Color(0.969743, 0.139159, 0.271569, 0.42)
+
+[node name="HitBoxAir" type="Area2D" parent="." unique_id=1521463922]
+collision_layer = 8
+collision_mask = 4
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="HitBoxAir" unique_id=40825668]
+position = Vector2(-3, -13)
+rotation = 1.5707964
+shape = SubResource("CapsuleShape2D_g3wa8")
+disabled = true
 
 [node name="HitTimer" type="Timer" parent="." unique_id=761237388]
 wait_time = 2.0
@@ -471,5 +539,6 @@ volume_db = -7.298
 [connection signal="area_entered" from="FirePower/HitBox" to="FirePower" method="_on_hit_box_area_entered"]
 [connection signal="animation_finished" from="Sprite2D/AnimationPlayer" to="." method="_on_animation_player_animation_finished"]
 [connection signal="area_entered" from="HitBox" to="." method="_on_hit_box_area_entered"]
+[connection signal="area_entered" from="HitBoxAir" to="." method="_on_hit_box_air_area_entered"]
 [connection signal="timeout" from="HitTimer" to="." method="_on_hit_timer_timeout"]
 [connection signal="timeout" from="BlinkTimer" to="." method="_on_blink_timer_timeout"]

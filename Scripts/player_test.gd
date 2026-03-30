@@ -1,6 +1,6 @@
 extends CharacterBody2D
 
-enum State { IDLE, RUN, JUMP, ATTACK, HIT }
+enum State { IDLE, RUN, JUMP, ATTACK, ATTACK_AIR, HIT }
 var current_state := State.IDLE
 #Init Values
 var disable_inputs = false
@@ -8,6 +8,7 @@ const SPEED = 450.0
 const JUMP_VELOCITY = -250.0
 var invulnerable = false
 var hitted = false
+var air_hit_enemies := []
 #Affected by level values
 @export var level_player = 1
 @export var sword_damage = 5
@@ -28,6 +29,7 @@ var cap_level: int = 30
 @onready var playerHurtBox = $HurtBox
 @onready var sprite = $Sprite2D
 @onready var fire_attack = $FirePower
+@onready var hit_box_air_shape = $HitBoxAir/CollisionShape2D
 @onready var label_level = $CanvasLayer/level
 @onready var label_basic_damage = $CanvasLayer/basic_damage
 @onready var label_debug = $CanvasLayer/debug
@@ -53,6 +55,7 @@ var state_animations = {
 	State.RUN: "run",
 	State.JUMP: ["jump_up", "jump_down"],
 	State.ATTACK: "attack",
+	State.ATTACK_AIR: "attack_air",
 	State.HIT: "hit"
 }
 
@@ -107,7 +110,10 @@ func _physics_process(delta):
 			attack_sound.play()
 			current_state = State.ATTACK
 	else:
-		pass
+		if Input.is_action_just_pressed("attack") and disable_inputs == false and current_state != State.ATTACK_AIR:
+			attack_sound.play()
+			air_hit_enemies.clear()
+			current_state = State.ATTACK_AIR
 	
 	#Hit State
 	if current_state == State.HIT:
@@ -123,6 +129,13 @@ func _physics_process(delta):
 	if current_state == State.ATTACK:
 		disable_inputs = true
 		velocity.x = 0
+
+	if current_state == State.ATTACK_AIR:
+		disable_inputs = true
+		if is_on_floor():
+			hit_box_air_shape.disabled = true
+			disable_inputs = false
+			current_state = State.RUN
 	
 	# Animation Control
 	if current_state == State.JUMP:
@@ -152,7 +165,13 @@ func get_cap_for_level(nivel: int) -> int:
 func _on_animation_player_animation_finished(anim_name):
 	if anim_name == "attack":
 		disable_inputs = false
-		current_state = State.RUN  # Transition back to run after attack
+		current_state = State.RUN
+	elif anim_name == "attack_air":
+		disable_inputs = false
+		if is_on_floor():
+			current_state = State.RUN
+		else:
+			current_state = State.JUMP
 	elif anim_name == "jump_down" and not is_on_floor():
 		$Sprite2D/AnimationPlayer.seek(0.1)
 	elif anim_name == "jump_down" and is_on_floor():
@@ -165,8 +184,8 @@ func _on_animation_player_animation_finished(anim_name):
 			disable_inputs = false
 			current_state = State.JUMP
 func _on_hit_box_area_entered(area):
-	#print("entro en contacto con" +str(area))
 	var enemy = area.get_parent()
+	print("[ATAQUE ESPADA] golpeó a: ", enemy.name)
 	if enemy.has_method("on_hit"):
 		var result = calculate_damage(sword_damage)
 		var damage = result[0]
@@ -176,6 +195,21 @@ func _on_hit_box_area_entered(area):
 func use_mana(mana):
 	mp -= mana
 	cambio_mana.emit()
+
+func restore_health(amount):
+	hp = min(hp + amount, maxHealth)
+	cambio_vida.emit()
+	pickup_flash()
+
+func restore_mana(amount):
+	mp = min(mp + amount, maxMP)
+	cambio_mana.emit()
+	pickup_flash()
+
+func pickup_flash() -> void:
+	sprite.modulate = Color(3, 3, 3, 1)
+	await get_tree().create_timer(0.1).timeout
+	sprite.modulate = Color(1, 1, 1, 1)
 
 func on_hit(dmg):
 	if not hitted and not invulnerable:
@@ -243,3 +277,14 @@ func shoot_fireball():
 	fireball_instance.player = self
 	get_tree().current_scene.add_child(fireball_instance)
 	
+
+
+func _on_hit_box_air_area_entered(area: Area2D) -> void:
+	var enemy = area.get_parent()
+	print("[ATAQUE AEREO] golpeó a: ", enemy.name)
+	if enemy.has_method("on_hit") and enemy not in air_hit_enemies:
+		air_hit_enemies.append(enemy)
+		var result = calculate_damage(sword_damage)
+		var damage = result[0]
+		var is_critical = result[1]
+		enemy.call("on_hit", damage, self, is_critical)
