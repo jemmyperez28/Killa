@@ -113,3 +113,33 @@ speed_scale = 0.3
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=1229351816]
 shape = SubResource("CapsuleShape2D_er2if")
+
+[node name="Timer" type="Timer" parent="." unique_id=516230076]
+wait_time = 5.0
+autostart = true
+
+[node name="ProgressBar" type="ProgressBar" parent="." unique_id=1285357967]
+offset_left = 22.0
+offset_top = -35.0
+offset_right = 26.0
+offset_bottom = 7.7276154
+rotation = 1.5707964
+fill_mode = 3
+show_percentage = false
+
+[node name="Label" type="Label" parent="." unique_id=761172567]
+offset_left = -20.0
+offset_top = -41.0
+offset_right = 15.0
+offset_bottom = -36.0
+theme_override_font_sizes/font_size = 4
+text = "lvl : "
+
+[node name="LabelLeveL" type="Label" parent="." unique_id=1276958515]
+offset_left = 1.0
+offset_top = -41.0
+offset_right = 36.0
+offset_bottom = -36.0
+theme_override_font_sizes/font_size = 4
+
+[connection signal="timeout" from="Timer" to="." method="_on_timer_timeout"]

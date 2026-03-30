@@ -173,7 +173,7 @@ shape = SubResource("CapsuleShape2D_2k8yh")
 debug_color = Color(0.26308, 0.628189, 0.246192, 0.42)
 
 [node name="DamageNumberOrigin" type="Node2D" parent="." unique_id=1032289688]
-position = Vector2(0, -13)
+position = Vector2(0, -18)
 
 [node name="HealthBar" type="ProgressBar" parent="." unique_id=1898074645]
 offset_left = 18.0
@@ -195,12 +195,12 @@ theme_override_font_sizes/font_size = 4
 horizontal_alignment = 1
 
 [node name="Label" type="Label" parent="." unique_id=1794682412]
-offset_left = -17.0
+offset_left = -18.0
 offset_top = -24.0
-offset_right = 7.0
+offset_right = 6.0
 offset_bottom = -16.0
 theme_override_font_sizes/font_size = 4
-text = "lvl : "
+text = "lvl: "
 horizontal_alignment = 1
 
 [connection signal="animation_finished" from="Sprite2D/AnimationPlayer" to="." method="_on_animation_player_animation_finished"]

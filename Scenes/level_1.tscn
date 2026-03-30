@@ -69,4 +69,4 @@ stream = ExtResource("6_lsmp6")
 script = ExtResource("7_xrdnt")
 
 [node name="Area2D" parent="." unique_id=2057196549 instance=ExtResource("8_xrdnt")]
-position = Vector2(243, 83)
+position = Vector2(244, 73)
