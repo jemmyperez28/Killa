@@ -8,7 +8,7 @@ var hp_potion_scene = preload("res://Scenes/hp_potion.tscn")
 var mp_potion_scene = preload("res://Scenes/mp_potion.tscn")
 
 @export var drop_chance: float = 1.0
-@export var mp_drop_weight: float = 1.0
+@export var mp_drop_weight: float = 0.8
 
 var speed: float = 80.0
 var direction: Vector2 = Vector2.ZERO
@@ -38,6 +38,8 @@ func _physics_process(delta: float) -> void:
 
 func on_hit(_dmg, _player_node, _is_critical) -> void:
 	DamageNumbers.display_number(_dmg, global_position, _is_critical)
+	if _player_node != null and _player_node.has_method("add_score"):
+		_player_node.add_score(5)
 	destroy()
 
 func destroy() -> void:

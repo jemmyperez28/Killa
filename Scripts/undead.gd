@@ -5,6 +5,7 @@ extends CharacterBody2D
 @onready var level_label = $LabelLeveL
 @onready var sprite = $Sprite2D
 @onready var hit_box = $HitBox
+@onready var hurt_box = $HurtBox
 
 var ice_particles_scene = preload("res://Scenes/ice_particles.tscn")
 var summon_scene = preload("res://Scenes/summon.tscn")
@@ -12,7 +13,7 @@ var hp_potion_scene = preload("res://Scenes/hp_potion.tscn")
 var mp_potion_scene = preload("res://Scenes/mp_potion.tscn")
 
 @export var drop_chance: float = 0.5
-@export var mp_drop_weight: float = 0.5
+@export var mp_drop_weight: float = 0.8
 
 @export var summon_radius: float = 80.0
 
@@ -25,12 +26,12 @@ var mp_potion_scene = preload("res://Scenes/mp_potion.tscn")
 var level: int = 10
 
 @export var base_hp: float = 10.0
-@export var base_damage: float = 5.0
+@export var base_damage: float = 7.5
 @export var base_give_exp: float = 10.0
 
 # Factores de crecimiento
-@export var hp_growth: float = 1.35
-@export var damage_growth: float = 1.14
+@export var hp_growth: float = 1.25
+@export var damage_growth: float = 1.12
 @export var exp_growth: float = 1.25
 
 # Stats finales
@@ -138,6 +139,8 @@ func emit_particles() -> void:
 
 func destroy() -> void:
 	drop_potion()
+	hit_box.set_deferred("monitoring", false)
+	hurt_box.set_deferred("monitorable", false)
 	if animation_player.has_animation("death"):
 		is_busy = true
 		animation_player.play("death")

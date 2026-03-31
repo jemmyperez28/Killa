@@ -17,19 +17,20 @@ var rng := RandomNumberGenerator.new()
 @export var explosion_count: int = 10
 @export var explosion_spacing: float = 25.0
 @export var explosion_delay: float = 0.1
+@export var attack_chance: float = 0.8
 
 var gravity = ProjectSettings.get_setting("physics/2d/default_gravity")
 
 # Stats base
 var level: int = 1
 
-@export var base_hp: float = 50.0
-@export var base_damage: float = 8.0
+@export var base_hp: float = 150.0
+@export var base_damage: float = 10.0
 @export var base_give_exp: float = 30.0
 
 # Factores de crecimiento
-@export var hp_growth: float = 1.35
-@export var damage_growth: float = 1.14
+@export var hp_growth: float = 1.15
+@export var damage_growth: float = 1.10
 @export var exp_growth: float = 1.25
 
 # Stats finales
@@ -95,8 +96,8 @@ func _physics_process(delta: float) -> void:
 	if reached_position and not is_busy and hp > 0:
 		attack_timer += delta
 		if attack_timer >= attack_interval:
-			attack_timer = 0.0
-			if rng.randi_range(0, 1) == 0:
+			attack_timer = 0.0	
+			if rng.randf() < attack_chance:
 				start_attack()
 
 	move_and_slide()

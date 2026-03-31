@@ -4,7 +4,7 @@ var player = null
 
 var speed: float = 350.0
 var direction: int = 1
-var fire_damage = 20
+var fire_damage: float = 0.0
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
 	print("fireball creado")
@@ -18,6 +18,7 @@ func _on_area_entered(area: Area2D) -> void:
 	print("colision con: ", area.name)
 	var enemy = area.get_parent()
 	if enemy.has_method("on_hit") and player != null:
+		fire_damage = player.magic_power * 1.5
 		var result = player.calculate_damage(fire_damage)
 		var damage = result[0]
 		var is_critical = result[1]

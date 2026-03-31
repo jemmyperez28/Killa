@@ -1,0 +1,57 @@
+[gd_scene format=3 uid="uid://dna8rs37fl515"]
+
+[ext_resource type="Script" uid="uid://djgxis3brqt0y" path="res://Scripts/main_menu.gd" id="1_48xlc"]
+[ext_resource type="PackedScene" uid="uid://d0tn51esbly0g" path="res://Scenes/Background.tscn" id="2_1ehe0"]
+
+[node name="MainMenu" type="Control" unique_id=620546687]
+layout_mode = 3
+anchors_preset = 0
+script = ExtResource("1_48xlc")
+
+[node name="ParallaxBackground" parent="." unique_id=1641987175 instance=ExtResource("2_1ehe0")]
+speed = 5.0
+
+[node name="Title" type="Label" parent="." unique_id=1400273311]
+layout_mode = 0
+offset_left = 79.0
+offset_top = 80.0
+offset_right = 255.0
+offset_bottom = 96.0
+text = "Moon Runner"
+
+[node name="Play" type="Label" parent="." unique_id=1737359712]
+layout_mode = 0
+offset_left = 130.0
+offset_top = 116.0
+offset_right = 180.0
+offset_bottom = 132.0
+theme_override_font_sizes/font_size = 10
+text = "Play"
+
+[node name="Controls" type="Label" parent="." unique_id=354000776]
+layout_mode = 0
+offset_left = 113.0
+offset_top = 133.0
+offset_right = 193.0
+offset_bottom = 149.0
+theme_override_font_sizes/font_size = 10
+text = "Controls"
+
+[node name="Ranking" type="Label" parent="." unique_id=502903578]
+layout_mode = 0
+offset_left = 118.0
+offset_top = 150.0
+offset_right = 198.0
+offset_bottom = 166.0
+theme_override_font_sizes/font_size = 10
+text = "Ranking"
+
+[node name="Exit" type="Label" parent="." unique_id=1253322431]
+layout_mode = 0
+offset_left = 130.0
+offset_top = 167.0
+offset_right = 210.0
+offset_bottom = 190.0
+theme_override_font_sizes/font_size = 10
+text = "Exit
+"

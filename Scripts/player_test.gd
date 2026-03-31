@@ -9,20 +9,21 @@ const JUMP_VELOCITY = -250.0
 var invulnerable = false
 var hitted = false
 var air_hit_enemies := []
+var defense: float = 0.0
 #Affected by level values
 @export var level_player = 1
-@export var sword_damage = 5
-@export var maxHealth = 30
+@export var base_damage = 10
+@export var maxHealth = 100
 @export var base_cap_level = 30
-@export var maxMP = 30
+@export var maxMP = 40
 var cap_level: int = 30
 @export var exp_increment_factor = 1.18
 @export var current_exp = 0
 @onready var hp = maxHealth
 @onready var mp = maxMP
-@export var critical_chance = 0.05 #0.05  # Probabilidad de crítico (5%)
-@export var damage_variation = 2  # Variación de daño (+/- 2)
-@export var fire_damage = 50
+@export var critical_chance = 0.10 #0.05  # Probabilidad de crítico (5%)
+@export var damage_variation = 5  # Variación de daño (+/- 2)
+@export var magic_power = 10
 #Initialize instances
 @onready var hitTimer = $HitTimer
 @onready var blinkTimer = $BlinkTimer
@@ -32,17 +33,23 @@ var cap_level: int = 30
 @onready var hit_box_air_shape = $HitBoxAir/CollisionShape2D
 @onready var label_level = $CanvasLayer/level
 @onready var label_basic_damage = $CanvasLayer/basic_damage
+@onready var label_magic_atack = $CanvasLayer/LabelMagicATK
 @onready var label_debug = $CanvasLayer/debug
+@onready var label_score = $CanvasLayer/score
 #SOUNDS
 @onready var attack_sound = $AttackSound
 @onready var damage_sound = $DamageSound
 @onready var no_mana = $NoManaSound
 var fireball_scene = preload("res://Scenes/fire_ball_master.tscn")
 
-#Signials
+var score: int = 0
+
+#Signals
 signal cambio_vida(valor)
 signal cambio_mana(valor)
 signal set_exp(current_exp,cap_level)
+signal cambio_score(score)
+signal level_up_signal
 
 #DEBUG ZONE
 var concatenado = " "
@@ -61,7 +68,8 @@ var state_animations = {
 
 func _ready():
 	label_level.text = str(level_player)
-	label_basic_damage.text = str(sword_damage)
+	label_basic_damage.text = str(base_damage)
+	label_magic_atack.text = str(magic_power)
 	current_state = State.IDLE
 	cambio_vida.emit()
 	cambio_mana.emit()
@@ -187,7 +195,7 @@ func _on_hit_box_area_entered(area):
 	var enemy = area.get_parent()
 	print("[ATAQUE ESPADA] golpeó a: ", enemy.name)
 	if enemy.has_method("on_hit"):
-		var result = calculate_damage(sword_damage)
+		var result = calculate_damage(base_damage)
 		var damage = result[0]
 		var is_critical = result[1]
 		enemy.call("on_hit", damage, self, is_critical)
@@ -211,14 +219,24 @@ func pickup_flash() -> void:
 	await get_tree().create_timer(0.1).timeout
 	sprite.modulate = Color(1, 1, 1, 1)
 
+func add_score(points: int) -> void:
+	score = max(score + points, 0)
+	label_score.text = str(score) + " pts"
+	cambio_score.emit(score)
+
+func calculate_defense(dmg) -> int:
+	var reduction = defense / (defense + 10.0)
+	return max(1, int(dmg * (1.0 - reduction)))
+
 func on_hit(dmg):
 	if not hitted and not invulnerable:
-		#print("player on_hit")
+		var final_dmg = calculate_defense(dmg)
 		damage_sound.play()
 		hitted = true
 		invulnerable = true
 		current_state = State.HIT
-		hp -= dmg
+		hp -= final_dmg
+		add_score(-5)
 		#Salto a la izquierda
 		velocity.y = -200 #
 		$Sprite2D/AnimationPlayer.play("hit")
@@ -254,12 +272,19 @@ func get_exp(exp):
 	set_exp.emit(current_exp, cap_level)
 	
 func level_up():
-	level_player = level_player + 1 
-	sword_damage = sword_damage + 4
+	level_player = level_player + 1
+	base_damage = base_damage + 5
+	magic_power = magic_power + 2
+	maxHealth += 6
+	maxMP += 2
 	current_exp = current_exp - cap_level
-	cap_level = get_cap_for_level(level_player)  # Incrementa el cap_level exponencialmente
+	cap_level = get_cap_for_level(level_player)
 	label_level.text = str(level_player)
-	label_basic_damage.text = str(sword_damage)
+	label_basic_damage.text = str(base_damage)
+	label_magic_atack.text = str(magic_power)
+	cambio_vida.emit()
+	cambio_mana.emit()
+	level_up_signal.emit()
 	
 func calculate_damage(current_damage):
 	var is_critical = false
@@ -284,7 +309,7 @@ func _on_hit_box_air_area_entered(area: Area2D) -> void:
 	print("[ATAQUE AEREO] golpeó a: ", enemy.name)
 	if enemy.has_method("on_hit") and enemy not in air_hit_enemies:
 		air_hit_enemies.append(enemy)
-		var result = calculate_damage(sword_damage)
+		var result = calculate_damage(base_damage)
 		var damage = result[0]
 		var is_critical = result[1]
 		enemy.call("on_hit", damage, self, is_critical)

@@ -332,6 +332,7 @@ load_path = "res://.godot/imported/barra_mascara2.png-bfefd0b44b11dcff8e4fd07a78
 collision_layer = 3
 collision_mask = 7
 script = ExtResource("1_lk18g")
+exp_increment_factor = 1.15
 
 [node name="FirePower" type="Sprite2D" parent="." unique_id=1132458300]
 scale = Vector2(0.2, 0.2)
@@ -463,10 +464,12 @@ offset_bottom = 764.0
 scale = Vector2(0.05, 0.05)
 theme_override_fonts/font = ExtResource("9_brl7l")
 theme_override_font_sizes/font_size = 100
-text = "Nivel :
+text = "Lvl :
 
-Stats
-ATK   :
+ATK :
+
+MAG
+ATK :   
 "
 
 [node name="level" type="Label" parent="CanvasLayer" unique_id=1647817522]
@@ -479,6 +482,7 @@ theme_override_font_sizes/font_size = 100
 text = "0"
 
 [node name="debug" type="Label" parent="CanvasLayer" unique_id=2041556589]
+visible = false
 offset_left = 67.0
 offset_top = 75.0
 offset_right = 467.0
@@ -489,9 +493,9 @@ text = "Idle"
 
 [node name="basic_damage" type="Label" parent="CanvasLayer" unique_id=370812261]
 offset_left = 77.0
-offset_top = 61.0
+offset_top = 57.0
 offset_right = 227.0
-offset_bottom = 211.0
+offset_bottom = 207.0
 scale = Vector2(0.05, 0.05)
 theme_override_font_sizes/font_size = 100
 text = "0"
@@ -521,6 +525,22 @@ text = "HP:
 MP:
 
 exp:
+"
+
+[node name="score" type="Label" parent="CanvasLayer" unique_id=1812874822]
+offset_left = 193.0
+offset_top = 8.0
+offset_right = 257.0
+offset_bottom = 24.0
+theme_override_font_sizes/font_size = 10
+
+[node name="LabelMagicATK" type="Label" parent="CanvasLayer" unique_id=218582177]
+offset_left = 77.0
+offset_top = 71.0
+offset_right = 117.0
+offset_bottom = 87.0
+theme_override_font_sizes/font_size = 5
+text = "0
 "
 
 [node name="AttackSound" type="AudioStreamPlayer2D" parent="." unique_id=116484967]

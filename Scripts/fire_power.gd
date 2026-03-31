@@ -37,7 +37,8 @@ func _on_hit_box_area_entered(area: Area2D) -> void:
 	var enemy = area.get_parent()
 	print("[FIRE POWER] golpeó a: ", enemy.name)
 	if enemy.has_method("on_hit"):
-		var result = player.calculate_damage(player.fire_damage)
+		var fire_dmg = player.magic_power * 4
+		var result = player.calculate_damage(fire_dmg)
 		var damage = result[0]
 		var is_critical = result[1]
 		enemy.call("on_hit", damage, player, is_critical)

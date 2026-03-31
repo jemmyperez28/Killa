@@ -11,7 +11,7 @@ var hp_potion_scene = preload("res://Scenes/hp_potion.tscn")
 var mp_potion_scene = preload("res://Scenes/mp_potion.tscn")
 
 @export var drop_chance: float = 0.3
-@export var hp_drop_weight: float = 1.0
+@export var hp_drop_weight: float = 0.8
 
 var gravity = ProjectSettings.get_setting("physics/2d/default_gravity")
 var speed = 3000.0
@@ -20,7 +20,7 @@ var speed = 3000.0
 var level: int = 1
 
 @export var base_hp: float = 10.0
-@export var base_damage: float = 5.0
+@export var base_damage: float = 7.5
 @export var base_give_exp: float = 10.0
 
 # Factores de crecimiento
