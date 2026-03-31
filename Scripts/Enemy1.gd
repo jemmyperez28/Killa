@@ -94,7 +94,7 @@ func drop_potion() -> void:
 	else:
 		potion = mp_potion_scene.instantiate()
 	potion.global_position = global_position
-	get_tree().current_scene.add_child(potion)
+	get_tree().current_scene.call_deferred("add_child", potion)
 
 func _on_animation_player_animation_finished(anim_name) -> void:
 	if anim_name == "hit":

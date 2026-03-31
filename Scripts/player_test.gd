@@ -50,6 +50,7 @@ signal cambio_mana(valor)
 signal set_exp(current_exp,cap_level)
 signal cambio_score(score)
 signal level_up_signal
+signal player_died
 
 #DEBUG ZONE
 var concatenado = " "
@@ -91,8 +92,6 @@ func _physics_process(delta):
 		else:
 			no_mana.play()
 			DamageNumbers.display_text("NO MANA", global_position + Vector2(-15, -20), "#4CC9FF")
-	if Input.get_action_strength("restart") : 
-		get_tree().reload_current_scene()
 	#DEBUG ZONE
 	#print(velocity.x)
 	var state_name = state_animations[current_state] 
@@ -105,13 +104,13 @@ func _physics_process(delta):
 	# Movement and State Transitionss
 	if is_on_floor():
 		# Horizontal movement with delta
-		var movement_strength = (Input.get_action_strength("ui_right") - Input.get_action_strength("ui_left")) * 20.0
+		var movement_strength = (Input.get_action_strength("move_right") - Input.get_action_strength("move_left")) * 20.0
 		#desactivar movimiento en otro estado
 		if disable_inputs == false :
 			velocity.x = movement_strength * SPEED * delta
 		#print(velocity.x)
 		# State transitions based on input
-		if Input.is_action_just_pressed("ui_up") and disable_inputs == false:
+		if Input.is_action_just_pressed("jump") and disable_inputs == false:
 			velocity.y = JUMP_VELOCITY
 			current_state = State.JUMP
 		elif Input.is_action_just_pressed("attack")  and disable_inputs == false:
@@ -237,13 +236,26 @@ func on_hit(dmg):
 		current_state = State.HIT
 		hp -= final_dmg
 		add_score(-5)
+		cambio_vida.emit()
+		if hp <= 0:
+			die()
+			return
 		#Salto a la izquierda
 		velocity.y = -200 #
 		$Sprite2D/AnimationPlayer.play("hit")
 		playerHurtBox.monitoring = false
 		hitTimer.start()
 		blinkTimer.start()
-		cambio_vida.emit()
+
+func die() -> void:
+	disable_inputs = true
+	invulnerable = true
+	playerHurtBox.monitoring = false
+	hitTimer.stop()
+	blinkTimer.stop()
+	velocity = Vector2.ZERO
+	$Sprite2D/AnimationPlayer.play("hit")
+	player_died.emit()
 
 func _on_hit_timer_timeout():
 	#print("Timer terminado")

@@ -7,6 +7,7 @@ var undead_scene = preload("res://Scenes/undead.tscn")
 var lord_scene = preload("res://Scenes/lord.tscn")
 var explosion_scene = preload("res://Scenes/explosion_lord.tscn")
 var upgrade_menu_script = preload("res://Scripts/upgrade_menu.gd")
+var name_input_script = preload("res://Scripts/name_input_ui.gd")
 
 var random = RandomNumberGenerator.new()
 
@@ -54,6 +55,7 @@ var score_lord: int = 100
 func _ready():
 	random.randomize()
 	create_wave_label()
+	player.player_died.connect(_on_player_died)
 	start_next_wave()
 
 func create_wave_label() -> void:
@@ -220,7 +222,7 @@ func spawn_enemy():
 	enemy_instance.set_level(enemy_level)
 	enemy_alive += 1
 	enemies_spawned += 1
-	enemy_instance.tree_exited.connect(_on_enemy_killed.bind("enemy"))
+	enemy_instance.tree_exited.connect(_on_enemy_killed.bind(enemy_instance, "enemy"))
 
 func spawn_undead():
 	var undead_instance = undead_scene.instantiate()
@@ -242,7 +244,7 @@ func spawn_undead():
 	undead_instance.set_level(undead_level)
 	undead_alive += 1
 	undeads_spawned += 1
-	undead_instance.tree_exited.connect(_on_enemy_killed.bind("undead"))
+	undead_instance.tree_exited.connect(_on_enemy_killed.bind(undead_instance, "undead"))
 
 func spawn_lord():
 	lord_spawned = true
@@ -259,7 +261,7 @@ func spawn_lord():
 
 	add_child(lord_instance)
 	lord_instance.set_level(lord_level)
-	lord_instance.tree_exited.connect(_on_enemy_killed.bind("lord"))
+	lord_instance.tree_exited.connect(_on_enemy_killed.bind(lord_instance, "lord"))
 
 func show_upgrade_menu() -> void:
 	var menu = CanvasLayer.new()
@@ -277,20 +279,23 @@ func clear_all_enemies() -> void:
 	enemy_alive = 0
 	undead_alive = 0
 
-func _on_enemy_killed(type: String):
+func _on_enemy_killed(enemy_ref: CharacterBody2D, type: String):
+	var killed_by_zone = false
+	if is_instance_valid(enemy_ref):
+		killed_by_zone = enemy_ref.get_meta("killed_by_zone", false)
 	match type:
 		"enemy":
 			enemy_alive = max(enemy_alive - 1, 0)
 			kills_in_wave += 1
-			if player != null:
+			if player != null and not killed_by_zone:
 				player.add_score(score_enemy * current_wave)
 		"undead":
 			undead_alive = max(undead_alive - 1, 0)
-			if player != null:
+			if player != null and not killed_by_zone:
 				player.add_score(score_undead * current_wave)
 		"lord":
 			lord_alive = false
-			if player != null:
+			if player != null and not killed_by_zone:
 				player.add_score(score_lord * current_wave)
 
 func spawn_explosion_chain() -> void:
@@ -302,14 +307,29 @@ func spawn_explosion_chain() -> void:
 	var start_y: float = 197.0
 
 	for i in range(explosion_count):
-		if not wave_active:
+		if not wave_active or not is_inside_tree():
 			break
 		var explosion = explosion_scene.instantiate()
 		explosion.global_position = Vector2(start_x - i * explosion_spacing, start_y)
 		explosion.damage = explosion_damage
-		get_tree().current_scene.add_child(explosion)
+		get_tree().current_scene.call_deferred("add_child", explosion)
 		await get_tree().create_timer(explosion_delay).timeout
 
-func go_to_credits() -> void:
+func show_name_input(title_text: String) -> void:
+	wave_active = false
+	await get_tree().create_timer(1.0).timeout
+	var ui = CanvasLayer.new()
+	ui.set_script(name_input_script)
+	ui.score = player.score
+	get_tree().current_scene.add_child(ui)
+	ui.set_title(title_text)
+	get_tree().paused = true
+	await ui.name_submitted
 	get_tree().paused = false
-	get_tree().change_scene_to_file("res://Scenes/credits.tscn")
+	get_tree().change_scene_to_file("res://Scenes/main_menu.tscn")
+
+func go_to_credits() -> void:
+	show_name_input("YOU WIN!")
+
+func _on_player_died() -> void:
+	show_name_input("GAME OVER")

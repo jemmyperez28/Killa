@@ -113,7 +113,7 @@ func on_hit(dmg, player_node, is_critical) -> void:
 		health_bar.value = hp
 
 		if hp <= 0:
-			if player_node.has_method("get_exp"):
+			if player_node != null and player_node.has_method("get_exp"):
 				player_node.call("get_exp", give_exp)
 			destroy()
 		else:
@@ -144,7 +144,7 @@ func drop_potion() -> void:
 	else:
 		potion = hp_potion_scene.instantiate()
 	potion.global_position = global_position
-	get_tree().current_scene.add_child(potion)
+	get_tree().current_scene.call_deferred("add_child", potion)
 
 func start_attack() -> void:
 	is_busy = true

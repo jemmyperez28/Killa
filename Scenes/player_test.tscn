@@ -330,7 +330,7 @@ load_path = "res://.godot/imported/barra_mascara2.png-bfefd0b44b11dcff8e4fd07a78
 
 [node name="player_test" type="CharacterBody2D" unique_id=1590612298 groups=["player"]]
 collision_layer = 3
-collision_mask = 7
+collision_mask = 39
 script = ExtResource("1_lk18g")
 exp_increment_factor = 1.15
 
